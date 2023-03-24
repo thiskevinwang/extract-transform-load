@@ -67,6 +67,9 @@ jobs:
           path: repo-contents
       - name: Run Transform Action
         uses: ./actions/transform
+        with:
+          working-directory: ${{ github.workspace }}/repo-contents
+          content-directory: ${{ inputs.content-dir }}
 
   load:
     needs: transform
