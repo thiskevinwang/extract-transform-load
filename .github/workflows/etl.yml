@@ -88,7 +88,7 @@ jobs:
         with:
           name: repo-contents-transformed
           path: repo-contents
-      - name: Run Transform Action
+      - name: Run Load Action
         uses: ./actions/load
         with:
           working-directory: ${{ github.workspace }}/repo-contents
