@@ -1,0 +1,35 @@
+name: ETL
+run-name: "ETL, repo: ${{ inputs.repository }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        type: string
+        description: The directory to run the ETL on. Like 'hashicorp/waypoint'
+        required: false
+      content-dir:
+        type: string
+        default: "content"
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "=== EXTRACT ==="
+      - name: Checkout This Repo
+        uses: actions/checkout@v3
+        with:
+          repo: ${{ inputs.repository }}
+          path: repository
+  transform:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "=== TRANSFORM ==="
+  load:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "=== LOAD ==="
