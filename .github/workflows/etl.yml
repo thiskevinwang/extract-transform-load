@@ -25,36 +25,60 @@ jobs:
           name: etl-actions
           # This uploads the ./extract, ./load, and ./transform directories
           path: actions/
+          retention-days: 1
 
   extract:
     needs: setup
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "=== EXTRACT ==="
-      - name: Download Actions
-        uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: etl-actions
           path: actions
-
-      - name: Display structure of downloaded files
-        run: ls -R
+      # # For debugging
+      # - name: Display structure of downloaded files
+      #   run: ls -R
       - name: Run Extract Action
-        uses: ./actions/extract
+        uses: ./actions/extract # This might not need to do anything...
         with:
           milliseconds: 2000
+      - name: Checkout content repository and store it in `/repo`
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.repository }}
+          path: repo-contents
+      - uses: actions/upload-artifact@v3
+        with:
+          name: repo-contents
+          path: repo-contents
+          retention-days: 1
 
   transform:
     needs: extract
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "=== TRANSFORM ==="
+      - uses: actions/download-artifact@v3
+        with:
+          name: etl-actions
+          path: actions
+      - uses: actions/download-artifact@v3
+        with:
+          name: repo-contents
+          path: repo-contents
+      - name: Run Transform Action
+        uses: ./actions/transform
 
   load:
     needs: transform
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "=== LOAD ==="
+      - uses: actions/download-artifact@v3
+        with:
+          name: etl-actions
+          path: actions
+      - uses: actions/download-artifact@v3
+        with:
+          name: repo-contents
+          path: repo-contents
+      - name: Run Transform Action
+        uses: ./actions/load
