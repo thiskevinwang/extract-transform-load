@@ -21,10 +21,12 @@ async function run(): Promise<void> {
 
   // crude transformation
   files.forEach((file) => {
-    console.log(file.path);
+    core.startGroup(file.path);
     const content = fs.readFileSync(file.path, "utf8");
+    core.info(content);
     const newContent = content + " -- TRANSFORMED";
     fs.writeFileSync(file.path, newContent, "utf8");
+    core.endGroup();
   });
 }
 

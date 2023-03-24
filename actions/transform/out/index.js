@@ -3928,10 +3928,12 @@ async function run() {
     });
     // crude transformation
     files.forEach((file) => {
-        console.log(file.path);
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup(file.path);
         const content = fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync(file.path, "utf8");
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(content);
         const newContent = content + " -- TRANSFORMED";
         fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync(file.path, newContent, "utf8");
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
     });
 }
 run();
