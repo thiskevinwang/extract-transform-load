@@ -3915,7 +3915,7 @@ __nccwpck_require__.r(__webpack_exports__);
 async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("actions/transform");
     const workingDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("working-directory");
-    const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("content-dir");
+    const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("content-directory");
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`workingDirectory = ${workingDirectory}`);
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`contentDirectory = ${contentDirectory}`);
     const files = klaw_sync__WEBPACK_IMPORTED_MODULE_3___default()(path__WEBPACK_IMPORTED_MODULE_1__.join(workingDirectory, contentDirectory), {

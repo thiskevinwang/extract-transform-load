@@ -6,7 +6,7 @@ import walk from "klaw-sync";
 async function run(): Promise<void> {
   core.info("actions/transform");
   const workingDirectory = core.getInput("working-directory");
-  const contentDirectory = core.getInput("content-dir");
+  const contentDirectory = core.getInput("content-directory");
   core.info(`workingDirectory = ${workingDirectory}`);
   core.info(`contentDirectory = ${contentDirectory}`);
 
