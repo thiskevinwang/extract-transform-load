@@ -26,6 +26,7 @@ jobs:
           path: actions/
 
   extract:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -40,12 +41,14 @@ jobs:
           milliseconds: 2000
 
   transform:
+    needs: extract
     runs-on: ubuntu-latest
     steps:
       - run: |
           echo "=== TRANSFORM ==="
 
   load:
+    needs: transform
     runs-on: ubuntu-latest
     steps:
       - run: |
