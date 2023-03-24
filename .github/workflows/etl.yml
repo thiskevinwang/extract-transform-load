@@ -23,6 +23,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: etl-actions
+          # This uploads the ./extract, ./load, and ./transform directories
           path: actions/
 
   extract:
@@ -35,6 +36,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: etl-actions
+          path: actions
+
       - name: Display structure of downloaded files
         run: ls -R
       - name: Run Extract Action
