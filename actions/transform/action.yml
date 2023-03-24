@@ -1,11 +1,13 @@
 name: "Transform"
 description: "Provide a description here"
 author: "Your name or organization here"
-# inputs:
-#   milliseconds: # change this
-#     required: true
-#     description: "input description here"
-#     default: "default value if applicable"
+inputs:
+  working-directory:
+    required: true
+    description: "input description here"
+  content-directory:
+    required: true
+    description: "input description here"
 runs:
   using: "node16"
   main: "out/index.js"
