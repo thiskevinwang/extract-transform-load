@@ -13,29 +13,38 @@ on:
         default: "content"
 
 jobs:
-  # setup:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: |
-  #         echo "=== SETUP ==="
-  #     - name: Make ETL Actions Available
-  #       uses: actions/checkout@v3
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "=== SETUP ==="
+      - uses: actions/checkout@v3
+      # Make actions available to subsequent jobs
+      - uses: actions/upload-artifact@v3
+        with:
+          name: etl-actions
+          path: actions/
+
   extract:
     runs-on: ubuntu-latest
     steps:
-      - name: Make ETL Actions Available
-        uses: actions/checkout@v3
       - run: |
           echo "=== EXTRACT ==="
+      - name: Download Actions
+        uses: actions/download-artifact@v3
+        with:
+          name: etl-actions
       - name: Run Extract Action
         uses: ./actions/extract
         with:
           milliseconds: 2000
+
   transform:
     runs-on: ubuntu-latest
     steps:
       - run: |
           echo "=== TRANSFORM ==="
+
   load:
     runs-on: ubuntu-latest
     steps:
