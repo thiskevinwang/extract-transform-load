@@ -13,16 +13,18 @@ on:
         default: "content"
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "=== SETUP ==="
-      - name: Make ETL Actions Available
-        uses: actions/checkout@v3
+  # setup:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: |
+  #         echo "=== SETUP ==="
+  #     - name: Make ETL Actions Available
+  #       uses: actions/checkout@v3
   extract:
     runs-on: ubuntu-latest
     steps:
+      - name: Make ETL Actions Available
+        uses: actions/checkout@v3
       - run: |
           echo "=== EXTRACT ==="
       - name: Run Extract Action
