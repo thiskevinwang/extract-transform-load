@@ -1,0 +1,6 @@
+{
+  "name": "extract",
+  "scripts": {
+    "build": "ncc build src/main.ts -o out"
+  }
+}

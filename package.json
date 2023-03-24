@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "ncc": "^0.3.6"
+    "@vercel/ncc": "^0.36.1"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
     "typescript": "^5.0.2"
-  }
+  },
+  "workspaces": [
+    "actions/*"
+  ]
 }

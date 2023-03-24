@@ -13,16 +13,22 @@ on:
         default: "content"
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "=== SETUP ==="
+      - name: Make ETL Actions Available
+        uses: actions/checkout@v3
   extract:
     runs-on: ubuntu-latest
     steps:
       - run: |
           echo "=== EXTRACT ==="
-      - name: Checkout This Repo
-        uses: actions/checkout@v3
+      - name: Run Extract Action
+        uses: ./actions/extract
         with:
-          repository: ${{ inputs.repository }}
-          path: repository
+          milliseconds: 2000
   transform:
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "target": "es6",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["actions/**/*", "global.d.ts"],
+  "exclude": ["node_modules"]
+}
