@@ -3922,7 +3922,8 @@ async function run() {
         nodir: true,
         traverseAll: true,
         filter: (item) => {
-            return item.path.endsWith(".md");
+            // ends with .mdx or .md
+            return !!item.path.match(/\.(mdx|md)$/);
         },
     });
     // crude transformation
