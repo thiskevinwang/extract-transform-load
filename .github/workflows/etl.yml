@@ -35,6 +35,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: etl-actions
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Run Extract Action
         uses: ./actions/extract
         with:
