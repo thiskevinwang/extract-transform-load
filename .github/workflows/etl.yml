@@ -70,6 +70,11 @@ jobs:
         with:
           working-directory: ${{ github.workspace }}/repo-contents
           content-directory: ${{ inputs.content-dir }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: repo-contents-transformed
+          path: repo-contents
+          retention-days: 1
 
   load:
     needs: transform
@@ -81,7 +86,10 @@ jobs:
           path: actions
       - uses: actions/download-artifact@v3
         with:
-          name: repo-contents
+          name: repo-contents-transformed
           path: repo-contents
       - name: Run Transform Action
         uses: ./actions/load
+        with:
+          working-directory: ${{ github.workspace }}/repo-contents
+          content-directory: ${{ inputs.content-dir }}
