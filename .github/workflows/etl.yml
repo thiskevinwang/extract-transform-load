@@ -21,7 +21,7 @@ jobs:
       - name: Checkout This Repo
         uses: actions/checkout@v3
         with:
-          repo: ${{ inputs.repository }}
+          repository: ${{ inputs.repository }}
           path: repository
   transform:
     runs-on: ubuntu-latest
