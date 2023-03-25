@@ -23,7 +23,7 @@ async function run(): Promise<void> {
   });
   core.startGroup("pathsToDelete");
   pathsToDelete.forEach((p) => {
-    core.info(" - " + p);
+    core.info(" - " + p.path);
   });
   core.endGroup();
 

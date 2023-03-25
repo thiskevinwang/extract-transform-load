@@ -3930,7 +3930,7 @@ async function run() {
     });
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup("pathsToDelete");
     pathsToDelete.forEach((p) => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(" - " + p);
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(" - " + p.path);
     });
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
     // delete
