@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as core from "@actions/core";
 import walk from "klaw-sync";
+import { rimrafSync } from "rimraf";
 
 async function run(): Promise<void> {
   core.info("actions/extract");
@@ -11,25 +12,9 @@ async function run(): Promise<void> {
   core.info(`contentDirectory = ${contentDirectory}`);
 
   // remove all folders that aren't the content directory
-  const pathsToDelete = walk(workingDirectory, {
-    depthLimit: 1,
-    nofile: false,
-    nodir: false,
-    filter: (item) => {
-      return !item.path.endsWith(contentDirectory);
-    },
-  });
-
-  for (const e of pathsToDelete) {
-    core.info(`deleting ${e.path}`);
-    const stats = fs.lstatSync(e.path);
-    if (stats.isDirectory()) {
-      fs.rmdirSync(e.path, { recursive: true });
-    }
-    if (stats.isFile()) {
-      fs.rmSync(e.path, { force: true });
-    }
-  }
+  const negativeGlob =
+    "!" + path.join(workingDirectory, contentDirectory, "**", "*");
+  rimrafSync(negativeGlob, { glob: true });
 }
 
 run();
