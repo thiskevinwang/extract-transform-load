@@ -19,6 +19,8 @@ async function run(): Promise<void> {
     },
   });
 
+  core.notice(`found ${files.length} files`);
+
   // crude transformation
   files.forEach((file) => {
     core.startGroup(file.path);

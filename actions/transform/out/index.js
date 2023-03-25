@@ -3926,6 +3926,7 @@ async function run() {
             return !!item.path.match(/\.(mdx|md)$/);
         },
     });
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.notice(`found ${files.length} files`);
     // crude transformation
     files.forEach((file) => {
         _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup(file.path);
