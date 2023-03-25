@@ -5349,6 +5349,7 @@ async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`negativeGlob = ${negativeGlob}`);
     const globber = await _actions_glob__WEBPACK_IMPORTED_MODULE_0__.create(negativeGlob);
     const files = await globber.glob();
+    _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`files = ${files}`);
     // delete
     files.forEach((file) => {
         _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`deleting ${file}`);

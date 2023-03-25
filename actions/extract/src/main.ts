@@ -18,6 +18,7 @@ async function run(): Promise<void> {
 
   const globber = await glob.create(negativeGlob);
   const files = await globber.glob();
+  core.info(`files = ${files}`);
 
   // delete
   files.forEach((file) => {
