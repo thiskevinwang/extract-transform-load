@@ -10659,7 +10659,8 @@ async function run() {
     core.info(`contentDirectory = ${contentDirectory}`);
     // remove all folders that aren't the content directory
     const negativeGlob = "!" + external_path_.join(workingDirectory, contentDirectory, "**", "*");
-    rimrafSync(negativeGlob, { glob: true });
+    core.info(`negativeGlob = ${negativeGlob}`);
+    await rimraf(negativeGlob, { glob: true });
 }
 run();
 

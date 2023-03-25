@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as core from "@actions/core";
 import walk from "klaw-sync";
-import { rimrafSync } from "rimraf";
+import { rimraf } from "rimraf";
 
 async function run(): Promise<void> {
   core.info("actions/extract");
@@ -14,7 +14,9 @@ async function run(): Promise<void> {
   // remove all folders that aren't the content directory
   const negativeGlob =
     "!" + path.join(workingDirectory, contentDirectory, "**", "*");
-  rimrafSync(negativeGlob, { glob: true });
+  core.info(`negativeGlob = ${negativeGlob}`);
+
+  await rimraf(negativeGlob, { glob: true });
 }
 
 run();
