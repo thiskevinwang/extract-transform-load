@@ -1,8 +1,8 @@
+import * as glob from "@actions/glob";
 import * as fs from "fs";
 import * as path from "path";
 import * as core from "@actions/core";
 import walk from "klaw-sync";
-import { rimraf } from "rimraf";
 
 async function run(): Promise<void> {
   core.info("actions/extract");
@@ -16,7 +16,20 @@ async function run(): Promise<void> {
     "!" + path.join(workingDirectory, contentDirectory, "**", "*");
   core.info(`negativeGlob = ${negativeGlob}`);
 
-  await rimraf(negativeGlob, { glob: true });
+  const globber = await glob.create(negativeGlob);
+  const files = await globber.glob();
+
+  // delete
+  files.forEach((file) => {
+    core.info(`deleting ${file}`);
+    const stat = fs.statSync(file);
+    if (stat.isDirectory()) {
+      fs.rmdirSync(file, { recursive: true });
+    }
+    if (stat.isFile()) {
+      fs.rmSync(file);
+    }
+  });
 }
 
 run();
