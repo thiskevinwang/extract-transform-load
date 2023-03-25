@@ -4,10 +4,16 @@ author: "Your name or organization here"
 inputs:
   working-directory:
     required: true
-    description: "input description here"
+    description: "(github.workspace)/repo-contents"
+  parent-directory:
+    required: true
+    description: "website"
   content-directory:
     required: true
-    description: "input description here"
+    description: "website/content"
+  data-directory:
+    required: true
+    description: "website/data"
 runs:
   using: "node16"
   main: "out/index.js"

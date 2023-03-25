@@ -7,10 +7,17 @@ on:
       repository:
         type: string
         description: The directory to run the ETL on. Like 'hashicorp/waypoint'
+        default: "hashicorp/waypoint"
         required: false
+      parent-dir:
+        type: string
+        default: "website"
       content-dir:
         type: string
-        default: "content"
+        default: "website/content"
+      data-dir:
+        type: string
+        default: "website/data"
 
 jobs:
   setup:
@@ -40,17 +47,20 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           path: repo-contents
-      - name: Run Extract Action
-        uses: ./actions/extract
-        with:
-          working-directory: ${{ github.workspace }}/repo-contents
-          content-directory: ${{ inputs.content-dir }}
-      - run: |
-          ls -R repo-contents
-      - uses: actions/upload-artifact@v3
+      # - name: Run Extract Action
+      #   uses: ./actions/extract
+      #   with:
+      #     working-directory: ${{ github.workspace }}/repo-contents
+      #     parent-directory: ${{ inputs.parent-dir }}
+      #     content-directory: ${{ inputs.content-dir }}
+      #     data-directory: ${{ inputs.data-dir }}
+      # - run: |
+      #     ls -R repo-contents
+      - name: "Upload repo 'website' dir"
+        uses: actions/upload-artifact@v3
         with:
           name: repo-contents
-          path: repo-contents
+          path: repo-contents/${{ inputs.parent-dir }} # contents of ./website
           retention-days: 1
 
   transform:
@@ -64,16 +74,19 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: repo-contents
-          path: repo-contents
+          path: repo-contents/${{ inputs.parent-dir }}
       - name: Run Transform Action
         uses: ./actions/transform
         with:
           working-directory: ${{ github.workspace }}/repo-contents
+          parent-directory: ${{ inputs.parent-dir }}
           content-directory: ${{ inputs.content-dir }}
-      - uses: actions/upload-artifact@v3
+          data-directory: ${{ inputs.data-dir }}
+      - name: "Upload repo 'website' dir, transformed"
+        uses: actions/upload-artifact@v3
         with:
           name: repo-contents-transformed
-          path: repo-contents
+          path: repo-contents/${{ inputs.parent-dir }}
           retention-days: 1
 
   load:
@@ -87,9 +100,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: repo-contents-transformed
-          path: repo-contents
+          path: repo-contents/${{ inputs.parent-dir }}
       - name: Run Load Action
         uses: ./actions/load
         with:
           working-directory: ${{ github.workspace }}/repo-contents
+          parent-directory: ${{ inputs.parent-dir }}
           content-directory: ${{ inputs.content-dir }}
+          data-directory: ${{ inputs.data-dir }}
