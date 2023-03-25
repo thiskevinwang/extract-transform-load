@@ -5330,29 +5330,26 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_glob__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_glob__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(7147);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1017);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(7117);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_3__);
-
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7117);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
 async function run() {
-    _actions_core__WEBPACK_IMPORTED_MODULE_3__.info("actions/extract");
-    const workingDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("working-directory");
-    const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_3__.getInput("content-directory");
-    _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`workingDirectory = ${workingDirectory}`);
-    _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`contentDirectory = ${contentDirectory}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("actions/extract");
+    const workingDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("working-directory");
+    const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("content-directory");
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`workingDirectory = ${workingDirectory}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`contentDirectory = ${contentDirectory}`);
     // remove all folders that aren't the content directory
-    const negativeGlob = "!" + path__WEBPACK_IMPORTED_MODULE_2__.join(workingDirectory, contentDirectory, "**", "*");
-    _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`negativeGlob = ${negativeGlob}`);
+    const negativeGlob = "!**/website/content/**/*"; // TODO fix this
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`negativeGlob = ${negativeGlob}`);
     const globber = await _actions_glob__WEBPACK_IMPORTED_MODULE_0__.create(negativeGlob);
     const files = await globber.glob();
-    _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`files = ${files}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`files = ${files}`);
     // delete
     files.forEach((file) => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_3__.info(`deleting ${file}`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`deleting ${file}`);
         const stat = fs__WEBPACK_IMPORTED_MODULE_1__.statSync(file);
         if (stat.isDirectory()) {
             fs__WEBPACK_IMPORTED_MODULE_1__.rmdirSync(file, { recursive: true });
