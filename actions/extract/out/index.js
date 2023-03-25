@@ -3934,6 +3934,7 @@ async function run() {
     });
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
     // delete
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup("deleting");
     pathsToDelete.forEach((file) => {
         try {
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`deleting ${file.path}`);
@@ -3949,6 +3950,7 @@ async function run() {
             _actions_core__WEBPACK_IMPORTED_MODULE_2__.warning(`failed to delete ${file.path}: ${e}`);
         }
     });
+    _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
 }
 run();
 

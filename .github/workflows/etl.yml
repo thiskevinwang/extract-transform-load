@@ -50,7 +50,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: repo-contents
-          path: repo-contents/${{ inputs.content-dir }}/
+          path: repo-contents
           retention-days: 1
 
   transform:

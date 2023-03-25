@@ -28,6 +28,7 @@ async function run(): Promise<void> {
   core.endGroup();
 
   // delete
+  core.startGroup("deleting");
   pathsToDelete.forEach((file) => {
     try {
       core.info(`deleting ${file.path}`);
@@ -42,6 +43,7 @@ async function run(): Promise<void> {
       core.warning(`failed to delete ${file.path}: ${e}`);
     }
   });
+  core.endGroup();
 }
 
 run();
