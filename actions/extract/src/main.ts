@@ -17,9 +17,8 @@ async function run(): Promise<void> {
     nodir: false,
     nofile: false,
     filter: (item) => {
-      return !item.path.startsWith(
-        path.join(workingDirectory, contentDirectory)
-      );
+      const pattern = path.join(workingDirectory, contentDirectory);
+      return !item.path.startsWith(pattern) && !pattern.includes(item.path);
     },
   });
   core.startGroup("pathsToDelete");

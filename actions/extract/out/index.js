@@ -3924,7 +3924,8 @@ async function run() {
         nodir: false,
         nofile: false,
         filter: (item) => {
-            return !item.path.startsWith(path__WEBPACK_IMPORTED_MODULE_1__.join(workingDirectory, contentDirectory));
+            const pattern = path__WEBPACK_IMPORTED_MODULE_1__.join(workingDirectory, contentDirectory);
+            return !item.path.startsWith(pattern) && !pattern.includes(item.path);
         },
     });
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup("pathsToDelete");
