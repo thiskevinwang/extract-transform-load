@@ -12,7 +12,7 @@ async function run(): Promise<void> {
   core.info(`contentDirectory = ${contentDirectory}`);
 
   // remove all folders that aren't the content directory
-  const negativeGlob = "!**/website/content/**/*"; // TODO fix this
+  const negativeGlob = "!!**/website/content/**/*"; // TODO fix this
   core.info(`negativeGlob = ${negativeGlob}`);
 
   const globber = await glob.create(negativeGlob);

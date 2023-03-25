@@ -5342,7 +5342,7 @@ async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`workingDirectory = ${workingDirectory}`);
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`contentDirectory = ${contentDirectory}`);
     // remove all folders that aren't the content directory
-    const negativeGlob = "!**/website/content/**/*"; // TODO fix this
+    const negativeGlob = "!!**/website/content/**/*"; // TODO fix this
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`negativeGlob = ${negativeGlob}`);
     const globber = await _actions_glob__WEBPACK_IMPORTED_MODULE_0__.create(negativeGlob);
     const files = await globber.glob();
