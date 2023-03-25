@@ -12,22 +12,35 @@ async function run(): Promise<void> {
   core.info(`contentDirectory = ${contentDirectory}`);
 
   // remove all folders that aren't the content directory
-  const negativeGlob = "!!**/website/content/**/*"; // TODO fix this
-  core.info(`negativeGlob = ${negativeGlob}`);
-
-  const globber = await glob.create(negativeGlob);
-  const files = await globber.glob();
-  core.info(`files = ${files}`);
+  const pathsToDelete = walk(workingDirectory, {
+    depthLimit: 2,
+    nodir: false,
+    nofile: false,
+    filter: (item) => {
+      return !item.path.startsWith(
+        path.join(workingDirectory, contentDirectory)
+      );
+    },
+  });
+  core.startGroup("pathsToDelete");
+  pathsToDelete.forEach((p) => {
+    core.info(" - " + p);
+  });
+  core.endGroup();
 
   // delete
-  files.forEach((file) => {
-    core.info(`deleting ${file}`);
-    const stat = fs.statSync(file);
-    if (stat.isDirectory()) {
-      fs.rmdirSync(file, { recursive: true });
-    }
-    if (stat.isFile()) {
-      fs.rmSync(file);
+  pathsToDelete.forEach((file) => {
+    try {
+      core.info(`deleting ${file.path}`);
+      const stat = fs.statSync(file.path);
+      if (stat.isDirectory()) {
+        fs.rmdirSync(file.path, { recursive: true });
+      }
+      if (stat.isFile()) {
+        fs.rmSync(file.path);
+      }
+    } catch (e) {
+      core.warning(`failed to delete ${file.path}: ${e}`);
     }
   });
 }
