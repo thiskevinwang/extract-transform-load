@@ -40,7 +40,7 @@ async function run(): Promise<void> {
         fs.rmSync(file.path);
       }
     } catch (e) {
-      core.warning(`failed to delete ${file.path}: ${e}`);
+      core.info(`failed to delete ${file.path}: ${e}`);
     }
   });
   core.endGroup();

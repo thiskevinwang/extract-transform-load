@@ -3947,7 +3947,7 @@ async function run() {
             }
         }
         catch (e) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_2__.warning(`failed to delete ${file.path}: ${e}`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`failed to delete ${file.path}: ${e}`);
         }
     });
     _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
