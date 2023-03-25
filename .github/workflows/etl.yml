@@ -35,22 +35,20 @@ jobs:
         with:
           name: etl-actions
           path: actions
-      # # For debugging
-      # - name: Display structure of downloaded files
-      #   run: ls -R
-      - name: Run Extract Action
-        uses: ./actions/extract # This might not need to do anything...
-        with:
-          milliseconds: 2000
-      - name: Checkout content repository and store it in `/repo`
+      - name: Checkout content repository and store it in `/repo-contents`
         uses: actions/checkout@v3
         with:
           repository: ${{ inputs.repository }}
           path: repo-contents
+      - name: Run Extract Action
+        uses: ./actions/extract
+        with:
+          working-directory: ${{ github.workspace }}/repo-contents
+          content-directory: ${{ inputs.content-dir }}
       - uses: actions/upload-artifact@v3
         with:
           name: repo-contents
-          path: repo-contents
+          path: repo-contents/${{ inputs.content-dir }}/
           retention-days: 1
 
   transform:

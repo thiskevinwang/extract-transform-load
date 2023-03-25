@@ -1,20 +1,34 @@
+import * as fs from "fs";
+import * as path from "path";
 import * as core from "@actions/core";
-import { wait } from "./wait";
+import walk from "klaw-sync";
 
 async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput("milliseconds");
-    core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+  core.info("actions/extract");
+  const workingDirectory = core.getInput("working-directory");
+  const contentDirectory = core.getInput("content-directory");
+  core.info(`workingDirectory = ${workingDirectory}`);
+  core.info(`contentDirectory = ${contentDirectory}`);
 
-    core.debug(new Date().toTimeString());
+  // remove all folders that aren't the content directory
+  const pathsToDelete = walk(workingDirectory, {
+    depthLimit: 1,
+    nofile: false,
+    nodir: false,
+    filter: (item) => {
+      return !item.path.endsWith(contentDirectory);
+    },
+  });
 
-    core.info("EXTRACTING");
-    await wait(parseInt(ms, 10));
-    core.debug(new Date().toTimeString());
-
-    core.setOutput("time", new Date().toTimeString());
-  } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message);
+  for (const e of pathsToDelete) {
+    core.info(`deleting ${e.path}`);
+    const stats = fs.lstatSync(e.path);
+    if (stats.isDirectory()) {
+      fs.rmdirSync(e.path, { recursive: true });
+    }
+    if (stats.isFile()) {
+      fs.rmSync(e.path, { force: true });
+    }
   }
 }
 
