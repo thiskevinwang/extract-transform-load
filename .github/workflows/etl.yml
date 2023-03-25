@@ -46,7 +46,7 @@ jobs:
           working-directory: ${{ github.workspace }}/repo-contents
           content-directory: ${{ inputs.content-dir }}
       - run: |
-          ls -R
+          ls -R repo-contents
       - uses: actions/upload-artifact@v3
         with:
           name: repo-contents
