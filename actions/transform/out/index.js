@@ -4429,6 +4429,8 @@ function one(files) {
 
 
 
+
+
 async function run() {
     core.info("actions/transform");
     const workingDirectory = core.getInput("working-directory");
@@ -4442,11 +4444,15 @@ async function run() {
     // crude transformation
     files.forEach((file) => {
         core.startGroup(file.path);
-        const content = external_fs_.readFileSync(file.path, "utf8");
-        core.info(JSON.stringify(file.data, null, 2));
-        core.info(content);
-        const newContent = content + " -- TRANSFORMED";
-        external_fs_.writeFileSync(file.path, newContent, "utf8");
+        // deserialize VFile object
+        const data = JSON.parse(external_fs_.readFileSync(file.path, "utf8"));
+        const vfile = new VFile(data);
+        // transform
+        const newValue = vfile.value + " -- TRANSFORMED";
+        vfile.value = newValue;
+        // serialize VFile object
+        vfile.value = JSON.stringify(vfile);
+        writeSync(vfile, { encoding: "utf8" });
         core.endGroup();
     });
 }

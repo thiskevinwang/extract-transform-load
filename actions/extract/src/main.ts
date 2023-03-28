@@ -19,6 +19,7 @@ async function run(): Promise<void> {
   core.notice(`found ${files.length} files`);
 
   // populate files with content because `vfile-find-down` does not
+  // and save files as serialized VFile objects.
   files.map((file) => {
     core.startGroup(`writing ${file.path}`);
 
@@ -31,7 +32,11 @@ async function run(): Promise<void> {
     };
 
     core.info(file.toString("utf8"));
+
+    // serialize VFile object
+    file.value = JSON.stringify(file);
     writeSync(file, { encoding: "utf8" });
+
     core.endGroup();
   });
 }

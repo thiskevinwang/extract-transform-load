@@ -4429,6 +4429,7 @@ function one(files) {
 
 
 
+
 async function run() {
     core.info("actions/load");
     const workingDirectory = core.getInput("working-directory");
@@ -4439,12 +4440,16 @@ async function run() {
         external_path_.join(workingDirectory, contentDirectory),
     ]);
     core.notice(`found ${files.length} files`);
-    // crude transformation
+    // load files
     files.forEach((file) => {
         core.startGroup(file.path);
-        const contents = external_fs_.readFileSync(file.path, "utf8");
-        core.info(JSON.stringify(file.data, null, 2));
-        core.info(contents);
+        // deserialize VFile object
+        const data = JSON.parse(external_fs_.readFileSync(file.path, "utf8"));
+        const vfile = new VFile(data);
+        // log data
+        core.info(JSON.stringify(vfile.data, null, 2));
+        // log deserialized value
+        core.info(vfile.value.toString());
         core.endGroup();
     });
 }

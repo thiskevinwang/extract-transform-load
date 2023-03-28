@@ -4442,6 +4442,7 @@ async function run() {
     ]);
     core.notice(`found ${files.length} files`);
     // populate files with content because `vfile-find-down` does not
+    // and save files as serialized VFile objects.
     files.map((file) => {
         core.startGroup(`writing ${file.path}`);
         file.value = external_fs_.readFileSync(file.path, "utf8");
@@ -4451,6 +4452,8 @@ async function run() {
             extract: 1,
         };
         core.info(file.toString("utf8"));
+        // serialize VFile object
+        file.value = JSON.stringify(file);
         writeSync(file, { encoding: "utf8" });
         core.endGroup();
     });
