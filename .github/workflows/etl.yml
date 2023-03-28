@@ -47,13 +47,13 @@ jobs:
         with:
           repository: ${{ inputs.repository }}
           path: repo-contents
-      # - name: Run Extract Action
-      #   uses: ./actions/extract
-      #   with:
-      #     working-directory: ${{ github.workspace }}/repo-contents
-      #     parent-directory: ${{ inputs.parent-dir }}
-      #     content-directory: ${{ inputs.content-dir }}
-      #     data-directory: ${{ inputs.data-dir }}
+      - name: Run Extract Action
+        uses: ./actions/extract
+        with:
+          working-directory: ${{ github.workspace }}/repo-contents
+          parent-directory: ${{ inputs.parent-dir }}
+          content-directory: ${{ inputs.content-dir }}
+          data-directory: ${{ inputs.data-dir }}
       # - run: |
       #     ls -R repo-contents
       - name: "Upload repo 'website' dir"
