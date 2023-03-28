@@ -4440,8 +4440,8 @@ async function run() {
     ]);
     core.notice(`found ${files.length} files`);
     files.map((file) => {
-        core.startGroup(`writing ${file}`);
-        core.info(file.value.toString());
+        core.startGroup(`writing ${file.path}`);
+        core.info(file.toString("utf8"));
         writeSync(file, { encoding: "utf8" });
         core.endGroup();
     });
