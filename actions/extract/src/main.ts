@@ -1,5 +1,5 @@
 import { findDown } from "vfile-find-down";
-import { write } from "to-vfile";
+import { writeSync } from "to-vfile";
 import * as path from "path";
 import * as core from "@actions/core";
 
@@ -16,13 +16,12 @@ async function run(): Promise<void> {
 
   core.notice(`found ${files.length} files`);
 
-  const promises = await Promise.all(
-    files.map((file) => {
-      return write(file);
-    })
-  );
-
-  core.notice(`wrote ${promises.length} files`);
+  files.map((file) => {
+    core.startGroup(`writing ${file}`);
+    core.info(file.value.toString());
+    writeSync(file, { encoding: "utf8" });
+    core.endGroup();
+  });
 }
 
 run();

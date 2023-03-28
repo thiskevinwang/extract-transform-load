@@ -4439,10 +4439,12 @@ async function run() {
         external_path_.join(workingDirectory, contentDirectory),
     ]);
     core.notice(`found ${files.length} files`);
-    const promises = await Promise.all(files.map((file) => {
-        return write(file);
-    }));
-    core.notice(`wrote ${promises.length} files`);
+    files.map((file) => {
+        core.startGroup(`writing ${file}`);
+        core.info(file.value.toString());
+        writeSync(file, { encoding: "utf8" });
+        core.endGroup();
+    });
 }
 run();
 
