@@ -1,6 +1,7 @@
 {
   "name": "extract",
+  "type": "module",
   "scripts": {
-    "build": "ncc build src/main.mts -o out"
+    "build": "ncc build src/main.ts -o out"
   }
 }

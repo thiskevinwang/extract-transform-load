@@ -3,7 +3,6 @@ import { write } from "to-vfile";
 import * as path from "path";
 import * as core from "@actions/core";
 
-// hello???????????
 async function run(): Promise<void> {
   core.info("actions/extract");
   const workingDirectory = core.getInput("working-directory");
