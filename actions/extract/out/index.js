@@ -4429,18 +4429,27 @@ var core = __nccwpck_require__(117);
 
 
 
+
 async function run() {
     core.info("actions/extract");
     const workingDirectory = core.getInput("working-directory");
     const contentDirectory = core.getInput("content-directory");
     core.info(`workingDirectory = ${workingDirectory}`);
     core.info(`contentDirectory = ${contentDirectory}`);
+    // collect file paths
     const files = await findDown(".mdx", [
         external_path_.join(workingDirectory, contentDirectory),
     ]);
     core.notice(`found ${files.length} files`);
+    // populate files with content because `vfile-find-down` does not
     files.map((file) => {
         core.startGroup(`writing ${file.path}`);
+        file.value = external_fs_.readFileSync(file.path, "utf8");
+        // smoke test pass of arbitrary VFile data
+        file.data = {
+            ...file.data,
+            extract: 1,
+        };
         core.info(file.toString("utf8"));
         writeSync(file, { encoding: "utf8" });
         core.endGroup();

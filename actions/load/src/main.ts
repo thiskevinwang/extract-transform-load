@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as core from "@actions/core";
-import walk from "klaw-sync";
+import { findDown } from "vfile-find-down";
 
 async function run(): Promise<void> {
   core.info("actions/load");
@@ -10,14 +10,9 @@ async function run(): Promise<void> {
   core.info(`workingDirectory = ${workingDirectory}`);
   core.info(`contentDirectory = ${contentDirectory}`);
 
-  const files = walk(path.join(workingDirectory, contentDirectory), {
-    nodir: true,
-    traverseAll: true,
-    filter: (item) => {
-      // ends with .mdx or .md
-      return !!item.path.match(/\.(mdx|md)$/);
-    },
-  });
+  const files = await findDown(".mdx", [
+    path.join(workingDirectory, contentDirectory),
+  ]);
 
   core.notice(`found ${files.length} files`);
 
@@ -25,6 +20,7 @@ async function run(): Promise<void> {
   files.forEach((file) => {
     core.startGroup(file.path);
     const contents = fs.readFileSync(file.path, "utf8");
+    core.info(JSON.stringify(file.data, null, 2));
     core.info(contents);
     core.endGroup();
   });

@@ -1,10 +1,9 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
+/******/ var __webpack_modules__ = ({
 
 /***/ 548:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -103,7 +102,6 @@ function escapeProperty(s) {
 /***/ 117:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -446,7 +444,6 @@ Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: funct
 /***/ 469:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 // For internal use, subject to change.
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -511,7 +508,6 @@ exports.prepareKeyValueMessage = prepareKeyValueMessage;
 /***/ 172:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -595,7 +591,6 @@ exports.OidcClient = OidcClient;
 /***/ 890:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -660,7 +655,6 @@ exports.toPlatformPath = toPlatformPath;
 /***/ 452:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -950,7 +944,6 @@ exports.summary = _summary;
 /***/ 472:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -997,7 +990,6 @@ exports.toCommandProperties = toCommandProperties;
 /***/ 873:
 /***/ (function(__unused_webpack_module, exports) {
 
-"use strict";
 
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -1085,7 +1077,6 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 /***/ 301:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
-"use strict";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -1697,7 +1688,6 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 /***/ 390:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.checkBypass = exports.getProxyUrl = void 0;
@@ -1777,1012 +1767,20 @@ function isLoopbackAddress(host) {
 
 /***/ }),
 
-/***/ 132:
+/***/ 324:
 /***/ ((module) => {
 
-"use strict";
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
 
-
-module.exports = clone
-
-var getPrototypeOf = Object.getPrototypeOf || function (obj) {
-  return obj.__proto__
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
 }
-
-function clone (obj) {
-  if (obj === null || typeof obj !== 'object')
-    return obj
-
-  if (obj instanceof Object)
-    var copy = { __proto__: getPrototypeOf(obj) }
-  else
-    var copy = Object.create(null)
-
-  Object.getOwnPropertyNames(obj).forEach(function (key) {
-    Object.defineProperty(copy, key, Object.getOwnPropertyDescriptor(obj, key))
-  })
-
-  return copy
-}
-
-
-/***/ }),
-
-/***/ 552:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-var fs = __nccwpck_require__(147)
-var polyfills = __nccwpck_require__(290)
-var legacy = __nccwpck_require__(410)
-var clone = __nccwpck_require__(132)
-
-var util = __nccwpck_require__(837)
-
-/* istanbul ignore next - node 0.x polyfill */
-var gracefulQueue
-var previousSymbol
-
-/* istanbul ignore else - node 0.x polyfill */
-if (typeof Symbol === 'function' && typeof Symbol.for === 'function') {
-  gracefulQueue = Symbol.for('graceful-fs.queue')
-  // This is used in testing by future versions
-  previousSymbol = Symbol.for('graceful-fs.previous')
-} else {
-  gracefulQueue = '___graceful-fs.queue'
-  previousSymbol = '___graceful-fs.previous'
-}
-
-function noop () {}
-
-function publishQueue(context, queue) {
-  Object.defineProperty(context, gracefulQueue, {
-    get: function() {
-      return queue
-    }
-  })
-}
-
-var debug = noop
-if (util.debuglog)
-  debug = util.debuglog('gfs4')
-else if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || ''))
-  debug = function() {
-    var m = util.format.apply(util, arguments)
-    m = 'GFS4: ' + m.split(/\n/).join('\nGFS4: ')
-    console.error(m)
-  }
-
-// Once time initialization
-if (!fs[gracefulQueue]) {
-  // This queue can be shared by multiple loaded instances
-  var queue = global[gracefulQueue] || []
-  publishQueue(fs, queue)
-
-  // Patch fs.close/closeSync to shared queue version, because we need
-  // to retry() whenever a close happens *anywhere* in the program.
-  // This is essential when multiple graceful-fs instances are
-  // in play at the same time.
-  fs.close = (function (fs$close) {
-    function close (fd, cb) {
-      return fs$close.call(fs, fd, function (err) {
-        // This function uses the graceful-fs shared queue
-        if (!err) {
-          resetQueue()
-        }
-
-        if (typeof cb === 'function')
-          cb.apply(this, arguments)
-      })
-    }
-
-    Object.defineProperty(close, previousSymbol, {
-      value: fs$close
-    })
-    return close
-  })(fs.close)
-
-  fs.closeSync = (function (fs$closeSync) {
-    function closeSync (fd) {
-      // This function uses the graceful-fs shared queue
-      fs$closeSync.apply(fs, arguments)
-      resetQueue()
-    }
-
-    Object.defineProperty(closeSync, previousSymbol, {
-      value: fs$closeSync
-    })
-    return closeSync
-  })(fs.closeSync)
-
-  if (/\bgfs4\b/i.test(process.env.NODE_DEBUG || '')) {
-    process.on('exit', function() {
-      debug(fs[gracefulQueue])
-      __nccwpck_require__(491).equal(fs[gracefulQueue].length, 0)
-    })
-  }
-}
-
-if (!global[gracefulQueue]) {
-  publishQueue(global, fs[gracefulQueue]);
-}
-
-module.exports = patch(clone(fs))
-if (process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !fs.__patched) {
-    module.exports = patch(fs)
-    fs.__patched = true;
-}
-
-function patch (fs) {
-  // Everything that references the open() function needs to be in here
-  polyfills(fs)
-  fs.gracefulify = patch
-
-  fs.createReadStream = createReadStream
-  fs.createWriteStream = createWriteStream
-  var fs$readFile = fs.readFile
-  fs.readFile = readFile
-  function readFile (path, options, cb) {
-    if (typeof options === 'function')
-      cb = options, options = null
-
-    return go$readFile(path, options, cb)
-
-    function go$readFile (path, options, cb, startTime) {
-      return fs$readFile(path, options, function (err) {
-        if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          enqueue([go$readFile, [path, options, cb], err, startTime || Date.now(), Date.now()])
-        else {
-          if (typeof cb === 'function')
-            cb.apply(this, arguments)
-        }
-      })
-    }
-  }
-
-  var fs$writeFile = fs.writeFile
-  fs.writeFile = writeFile
-  function writeFile (path, data, options, cb) {
-    if (typeof options === 'function')
-      cb = options, options = null
-
-    return go$writeFile(path, data, options, cb)
-
-    function go$writeFile (path, data, options, cb, startTime) {
-      return fs$writeFile(path, data, options, function (err) {
-        if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          enqueue([go$writeFile, [path, data, options, cb], err, startTime || Date.now(), Date.now()])
-        else {
-          if (typeof cb === 'function')
-            cb.apply(this, arguments)
-        }
-      })
-    }
-  }
-
-  var fs$appendFile = fs.appendFile
-  if (fs$appendFile)
-    fs.appendFile = appendFile
-  function appendFile (path, data, options, cb) {
-    if (typeof options === 'function')
-      cb = options, options = null
-
-    return go$appendFile(path, data, options, cb)
-
-    function go$appendFile (path, data, options, cb, startTime) {
-      return fs$appendFile(path, data, options, function (err) {
-        if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          enqueue([go$appendFile, [path, data, options, cb], err, startTime || Date.now(), Date.now()])
-        else {
-          if (typeof cb === 'function')
-            cb.apply(this, arguments)
-        }
-      })
-    }
-  }
-
-  var fs$copyFile = fs.copyFile
-  if (fs$copyFile)
-    fs.copyFile = copyFile
-  function copyFile (src, dest, flags, cb) {
-    if (typeof flags === 'function') {
-      cb = flags
-      flags = 0
-    }
-    return go$copyFile(src, dest, flags, cb)
-
-    function go$copyFile (src, dest, flags, cb, startTime) {
-      return fs$copyFile(src, dest, flags, function (err) {
-        if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          enqueue([go$copyFile, [src, dest, flags, cb], err, startTime || Date.now(), Date.now()])
-        else {
-          if (typeof cb === 'function')
-            cb.apply(this, arguments)
-        }
-      })
-    }
-  }
-
-  var fs$readdir = fs.readdir
-  fs.readdir = readdir
-  var noReaddirOptionVersions = /^v[0-5]\./
-  function readdir (path, options, cb) {
-    if (typeof options === 'function')
-      cb = options, options = null
-
-    var go$readdir = noReaddirOptionVersions.test(process.version)
-      ? function go$readdir (path, options, cb, startTime) {
-        return fs$readdir(path, fs$readdirCallback(
-          path, options, cb, startTime
-        ))
-      }
-      : function go$readdir (path, options, cb, startTime) {
-        return fs$readdir(path, options, fs$readdirCallback(
-          path, options, cb, startTime
-        ))
-      }
-
-    return go$readdir(path, options, cb)
-
-    function fs$readdirCallback (path, options, cb, startTime) {
-      return function (err, files) {
-        if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          enqueue([
-            go$readdir,
-            [path, options, cb],
-            err,
-            startTime || Date.now(),
-            Date.now()
-          ])
-        else {
-          if (files && files.sort)
-            files.sort()
-
-          if (typeof cb === 'function')
-            cb.call(this, err, files)
-        }
-      }
-    }
-  }
-
-  if (process.version.substr(0, 4) === 'v0.8') {
-    var legStreams = legacy(fs)
-    ReadStream = legStreams.ReadStream
-    WriteStream = legStreams.WriteStream
-  }
-
-  var fs$ReadStream = fs.ReadStream
-  if (fs$ReadStream) {
-    ReadStream.prototype = Object.create(fs$ReadStream.prototype)
-    ReadStream.prototype.open = ReadStream$open
-  }
-
-  var fs$WriteStream = fs.WriteStream
-  if (fs$WriteStream) {
-    WriteStream.prototype = Object.create(fs$WriteStream.prototype)
-    WriteStream.prototype.open = WriteStream$open
-  }
-
-  Object.defineProperty(fs, 'ReadStream', {
-    get: function () {
-      return ReadStream
-    },
-    set: function (val) {
-      ReadStream = val
-    },
-    enumerable: true,
-    configurable: true
-  })
-  Object.defineProperty(fs, 'WriteStream', {
-    get: function () {
-      return WriteStream
-    },
-    set: function (val) {
-      WriteStream = val
-    },
-    enumerable: true,
-    configurable: true
-  })
-
-  // legacy names
-  var FileReadStream = ReadStream
-  Object.defineProperty(fs, 'FileReadStream', {
-    get: function () {
-      return FileReadStream
-    },
-    set: function (val) {
-      FileReadStream = val
-    },
-    enumerable: true,
-    configurable: true
-  })
-  var FileWriteStream = WriteStream
-  Object.defineProperty(fs, 'FileWriteStream', {
-    get: function () {
-      return FileWriteStream
-    },
-    set: function (val) {
-      FileWriteStream = val
-    },
-    enumerable: true,
-    configurable: true
-  })
-
-  function ReadStream (path, options) {
-    if (this instanceof ReadStream)
-      return fs$ReadStream.apply(this, arguments), this
-    else
-      return ReadStream.apply(Object.create(ReadStream.prototype), arguments)
-  }
-
-  function ReadStream$open () {
-    var that = this
-    open(that.path, that.flags, that.mode, function (err, fd) {
-      if (err) {
-        if (that.autoClose)
-          that.destroy()
-
-        that.emit('error', err)
-      } else {
-        that.fd = fd
-        that.emit('open', fd)
-        that.read()
-      }
-    })
-  }
-
-  function WriteStream (path, options) {
-    if (this instanceof WriteStream)
-      return fs$WriteStream.apply(this, arguments), this
-    else
-      return WriteStream.apply(Object.create(WriteStream.prototype), arguments)
-  }
-
-  function WriteStream$open () {
-    var that = this
-    open(that.path, that.flags, that.mode, function (err, fd) {
-      if (err) {
-        that.destroy()
-        that.emit('error', err)
-      } else {
-        that.fd = fd
-        that.emit('open', fd)
-      }
-    })
-  }
-
-  function createReadStream (path, options) {
-    return new fs.ReadStream(path, options)
-  }
-
-  function createWriteStream (path, options) {
-    return new fs.WriteStream(path, options)
-  }
-
-  var fs$open = fs.open
-  fs.open = open
-  function open (path, flags, mode, cb) {
-    if (typeof mode === 'function')
-      cb = mode, mode = null
-
-    return go$open(path, flags, mode, cb)
-
-    function go$open (path, flags, mode, cb, startTime) {
-      return fs$open(path, flags, mode, function (err, fd) {
-        if (err && (err.code === 'EMFILE' || err.code === 'ENFILE'))
-          enqueue([go$open, [path, flags, mode, cb], err, startTime || Date.now(), Date.now()])
-        else {
-          if (typeof cb === 'function')
-            cb.apply(this, arguments)
-        }
-      })
-    }
-  }
-
-  return fs
-}
-
-function enqueue (elem) {
-  debug('ENQUEUE', elem[0].name, elem[1])
-  fs[gracefulQueue].push(elem)
-  retry()
-}
-
-// keep track of the timeout between retry() calls
-var retryTimer
-
-// reset the startTime and lastTime to now
-// this resets the start of the 60 second overall timeout as well as the
-// delay between attempts so that we'll retry these jobs sooner
-function resetQueue () {
-  var now = Date.now()
-  for (var i = 0; i < fs[gracefulQueue].length; ++i) {
-    // entries that are only a length of 2 are from an older version, don't
-    // bother modifying those since they'll be retried anyway.
-    if (fs[gracefulQueue][i].length > 2) {
-      fs[gracefulQueue][i][3] = now // startTime
-      fs[gracefulQueue][i][4] = now // lastTime
-    }
-  }
-  // call retry to make sure we're actively processing the queue
-  retry()
-}
-
-function retry () {
-  // clear the timer and remove it to help prevent unintended concurrency
-  clearTimeout(retryTimer)
-  retryTimer = undefined
-
-  if (fs[gracefulQueue].length === 0)
-    return
-
-  var elem = fs[gracefulQueue].shift()
-  var fn = elem[0]
-  var args = elem[1]
-  // these items may be unset if they were added by an older graceful-fs
-  var err = elem[2]
-  var startTime = elem[3]
-  var lastTime = elem[4]
-
-  // if we don't have a startTime we have no way of knowing if we've waited
-  // long enough, so go ahead and retry this item now
-  if (startTime === undefined) {
-    debug('RETRY', fn.name, args)
-    fn.apply(null, args)
-  } else if (Date.now() - startTime >= 60000) {
-    // it's been more than 60 seconds total, bail now
-    debug('TIMEOUT', fn.name, args)
-    var cb = args.pop()
-    if (typeof cb === 'function')
-      cb.call(null, err)
-  } else {
-    // the amount of time between the last attempt and right now
-    var sinceAttempt = Date.now() - lastTime
-    // the amount of time between when we first tried, and when we last tried
-    // rounded up to at least 1
-    var sinceStart = Math.max(lastTime - startTime, 1)
-    // backoff. wait longer than the total time we've been retrying, but only
-    // up to a maximum of 100ms
-    var desiredDelay = Math.min(sinceStart * 1.2, 100)
-    // it's been long enough since the last retry, do it again
-    if (sinceAttempt >= desiredDelay) {
-      debug('RETRY', fn.name, args)
-      fn.apply(null, args.concat([startTime]))
-    } else {
-      // if we can't do this job yet, push it to the end of the queue
-      // and let the next iteration check again
-      fs[gracefulQueue].push(elem)
-    }
-  }
-
-  // schedule our next run if one isn't already scheduled
-  if (retryTimer === undefined) {
-    retryTimer = setTimeout(retry, 0)
-  }
-}
-
-
-/***/ }),
-
-/***/ 410:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-var Stream = (__nccwpck_require__(781).Stream)
-
-module.exports = legacy
-
-function legacy (fs) {
-  return {
-    ReadStream: ReadStream,
-    WriteStream: WriteStream
-  }
-
-  function ReadStream (path, options) {
-    if (!(this instanceof ReadStream)) return new ReadStream(path, options);
-
-    Stream.call(this);
-
-    var self = this;
-
-    this.path = path;
-    this.fd = null;
-    this.readable = true;
-    this.paused = false;
-
-    this.flags = 'r';
-    this.mode = 438; /*=0666*/
-    this.bufferSize = 64 * 1024;
-
-    options = options || {};
-
-    // Mixin options into this
-    var keys = Object.keys(options);
-    for (var index = 0, length = keys.length; index < length; index++) {
-      var key = keys[index];
-      this[key] = options[key];
-    }
-
-    if (this.encoding) this.setEncoding(this.encoding);
-
-    if (this.start !== undefined) {
-      if ('number' !== typeof this.start) {
-        throw TypeError('start must be a Number');
-      }
-      if (this.end === undefined) {
-        this.end = Infinity;
-      } else if ('number' !== typeof this.end) {
-        throw TypeError('end must be a Number');
-      }
-
-      if (this.start > this.end) {
-        throw new Error('start must be <= end');
-      }
-
-      this.pos = this.start;
-    }
-
-    if (this.fd !== null) {
-      process.nextTick(function() {
-        self._read();
-      });
-      return;
-    }
-
-    fs.open(this.path, this.flags, this.mode, function (err, fd) {
-      if (err) {
-        self.emit('error', err);
-        self.readable = false;
-        return;
-      }
-
-      self.fd = fd;
-      self.emit('open', fd);
-      self._read();
-    })
-  }
-
-  function WriteStream (path, options) {
-    if (!(this instanceof WriteStream)) return new WriteStream(path, options);
-
-    Stream.call(this);
-
-    this.path = path;
-    this.fd = null;
-    this.writable = true;
-
-    this.flags = 'w';
-    this.encoding = 'binary';
-    this.mode = 438; /*=0666*/
-    this.bytesWritten = 0;
-
-    options = options || {};
-
-    // Mixin options into this
-    var keys = Object.keys(options);
-    for (var index = 0, length = keys.length; index < length; index++) {
-      var key = keys[index];
-      this[key] = options[key];
-    }
-
-    if (this.start !== undefined) {
-      if ('number' !== typeof this.start) {
-        throw TypeError('start must be a Number');
-      }
-      if (this.start < 0) {
-        throw new Error('start must be >= zero');
-      }
-
-      this.pos = this.start;
-    }
-
-    this.busy = false;
-    this._queue = [];
-
-    if (this.fd === null) {
-      this._open = fs.open;
-      this._queue.push([this._open, this.path, this.flags, this.mode, undefined]);
-      this.flush();
-    }
-  }
-}
-
-
-/***/ }),
-
-/***/ 290:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-var constants = __nccwpck_require__(57)
-
-var origCwd = process.cwd
-var cwd = null
-
-var platform = process.env.GRACEFUL_FS_PLATFORM || process.platform
-
-process.cwd = function() {
-  if (!cwd)
-    cwd = origCwd.call(process)
-  return cwd
-}
-try {
-  process.cwd()
-} catch (er) {}
-
-// This check is needed until node.js 12 is required
-if (typeof process.chdir === 'function') {
-  var chdir = process.chdir
-  process.chdir = function (d) {
-    cwd = null
-    chdir.call(process, d)
-  }
-  if (Object.setPrototypeOf) Object.setPrototypeOf(process.chdir, chdir)
-}
-
-module.exports = patch
-
-function patch (fs) {
-  // (re-)implement some things that are known busted or missing.
-
-  // lchmod, broken prior to 0.6.2
-  // back-port the fix here.
-  if (constants.hasOwnProperty('O_SYMLINK') &&
-      process.version.match(/^v0\.6\.[0-2]|^v0\.5\./)) {
-    patchLchmod(fs)
-  }
-
-  // lutimes implementation, or no-op
-  if (!fs.lutimes) {
-    patchLutimes(fs)
-  }
-
-  // https://github.com/isaacs/node-graceful-fs/issues/4
-  // Chown should not fail on einval or eperm if non-root.
-  // It should not fail on enosys ever, as this just indicates
-  // that a fs doesn't support the intended operation.
-
-  fs.chown = chownFix(fs.chown)
-  fs.fchown = chownFix(fs.fchown)
-  fs.lchown = chownFix(fs.lchown)
-
-  fs.chmod = chmodFix(fs.chmod)
-  fs.fchmod = chmodFix(fs.fchmod)
-  fs.lchmod = chmodFix(fs.lchmod)
-
-  fs.chownSync = chownFixSync(fs.chownSync)
-  fs.fchownSync = chownFixSync(fs.fchownSync)
-  fs.lchownSync = chownFixSync(fs.lchownSync)
-
-  fs.chmodSync = chmodFixSync(fs.chmodSync)
-  fs.fchmodSync = chmodFixSync(fs.fchmodSync)
-  fs.lchmodSync = chmodFixSync(fs.lchmodSync)
-
-  fs.stat = statFix(fs.stat)
-  fs.fstat = statFix(fs.fstat)
-  fs.lstat = statFix(fs.lstat)
-
-  fs.statSync = statFixSync(fs.statSync)
-  fs.fstatSync = statFixSync(fs.fstatSync)
-  fs.lstatSync = statFixSync(fs.lstatSync)
-
-  // if lchmod/lchown do not exist, then make them no-ops
-  if (fs.chmod && !fs.lchmod) {
-    fs.lchmod = function (path, mode, cb) {
-      if (cb) process.nextTick(cb)
-    }
-    fs.lchmodSync = function () {}
-  }
-  if (fs.chown && !fs.lchown) {
-    fs.lchown = function (path, uid, gid, cb) {
-      if (cb) process.nextTick(cb)
-    }
-    fs.lchownSync = function () {}
-  }
-
-  // on Windows, A/V software can lock the directory, causing this
-  // to fail with an EACCES or EPERM if the directory contains newly
-  // created files.  Try again on failure, for up to 60 seconds.
-
-  // Set the timeout this long because some Windows Anti-Virus, such as Parity
-  // bit9, may lock files for up to a minute, causing npm package install
-  // failures. Also, take care to yield the scheduler. Windows scheduling gives
-  // CPU to a busy looping process, which can cause the program causing the lock
-  // contention to be starved of CPU by node, so the contention doesn't resolve.
-  if (platform === "win32") {
-    fs.rename = typeof fs.rename !== 'function' ? fs.rename
-    : (function (fs$rename) {
-      function rename (from, to, cb) {
-        var start = Date.now()
-        var backoff = 0;
-        fs$rename(from, to, function CB (er) {
-          if (er
-              && (er.code === "EACCES" || er.code === "EPERM" || er.code === "EBUSY")
-              && Date.now() - start < 60000) {
-            setTimeout(function() {
-              fs.stat(to, function (stater, st) {
-                if (stater && stater.code === "ENOENT")
-                  fs$rename(from, to, CB);
-                else
-                  cb(er)
-              })
-            }, backoff)
-            if (backoff < 100)
-              backoff += 10;
-            return;
-          }
-          if (cb) cb(er)
-        })
-      }
-      if (Object.setPrototypeOf) Object.setPrototypeOf(rename, fs$rename)
-      return rename
-    })(fs.rename)
-  }
-
-  // if read() returns EAGAIN, then just try it again.
-  fs.read = typeof fs.read !== 'function' ? fs.read
-  : (function (fs$read) {
-    function read (fd, buffer, offset, length, position, callback_) {
-      var callback
-      if (callback_ && typeof callback_ === 'function') {
-        var eagCounter = 0
-        callback = function (er, _, __) {
-          if (er && er.code === 'EAGAIN' && eagCounter < 10) {
-            eagCounter ++
-            return fs$read.call(fs, fd, buffer, offset, length, position, callback)
-          }
-          callback_.apply(this, arguments)
-        }
-      }
-      return fs$read.call(fs, fd, buffer, offset, length, position, callback)
-    }
-
-    // This ensures `util.promisify` works as it does for native `fs.read`.
-    if (Object.setPrototypeOf) Object.setPrototypeOf(read, fs$read)
-    return read
-  })(fs.read)
-
-  fs.readSync = typeof fs.readSync !== 'function' ? fs.readSync
-  : (function (fs$readSync) { return function (fd, buffer, offset, length, position) {
-    var eagCounter = 0
-    while (true) {
-      try {
-        return fs$readSync.call(fs, fd, buffer, offset, length, position)
-      } catch (er) {
-        if (er.code === 'EAGAIN' && eagCounter < 10) {
-          eagCounter ++
-          continue
-        }
-        throw er
-      }
-    }
-  }})(fs.readSync)
-
-  function patchLchmod (fs) {
-    fs.lchmod = function (path, mode, callback) {
-      fs.open( path
-             , constants.O_WRONLY | constants.O_SYMLINK
-             , mode
-             , function (err, fd) {
-        if (err) {
-          if (callback) callback(err)
-          return
-        }
-        // prefer to return the chmod error, if one occurs,
-        // but still try to close, and report closing errors if they occur.
-        fs.fchmod(fd, mode, function (err) {
-          fs.close(fd, function(err2) {
-            if (callback) callback(err || err2)
-          })
-        })
-      })
-    }
-
-    fs.lchmodSync = function (path, mode) {
-      var fd = fs.openSync(path, constants.O_WRONLY | constants.O_SYMLINK, mode)
-
-      // prefer to return the chmod error, if one occurs,
-      // but still try to close, and report closing errors if they occur.
-      var threw = true
-      var ret
-      try {
-        ret = fs.fchmodSync(fd, mode)
-        threw = false
-      } finally {
-        if (threw) {
-          try {
-            fs.closeSync(fd)
-          } catch (er) {}
-        } else {
-          fs.closeSync(fd)
-        }
-      }
-      return ret
-    }
-  }
-
-  function patchLutimes (fs) {
-    if (constants.hasOwnProperty("O_SYMLINK") && fs.futimes) {
-      fs.lutimes = function (path, at, mt, cb) {
-        fs.open(path, constants.O_SYMLINK, function (er, fd) {
-          if (er) {
-            if (cb) cb(er)
-            return
-          }
-          fs.futimes(fd, at, mt, function (er) {
-            fs.close(fd, function (er2) {
-              if (cb) cb(er || er2)
-            })
-          })
-        })
-      }
-
-      fs.lutimesSync = function (path, at, mt) {
-        var fd = fs.openSync(path, constants.O_SYMLINK)
-        var ret
-        var threw = true
-        try {
-          ret = fs.futimesSync(fd, at, mt)
-          threw = false
-        } finally {
-          if (threw) {
-            try {
-              fs.closeSync(fd)
-            } catch (er) {}
-          } else {
-            fs.closeSync(fd)
-          }
-        }
-        return ret
-      }
-
-    } else if (fs.futimes) {
-      fs.lutimes = function (_a, _b, _c, cb) { if (cb) process.nextTick(cb) }
-      fs.lutimesSync = function () {}
-    }
-  }
-
-  function chmodFix (orig) {
-    if (!orig) return orig
-    return function (target, mode, cb) {
-      return orig.call(fs, target, mode, function (er) {
-        if (chownErOk(er)) er = null
-        if (cb) cb.apply(this, arguments)
-      })
-    }
-  }
-
-  function chmodFixSync (orig) {
-    if (!orig) return orig
-    return function (target, mode) {
-      try {
-        return orig.call(fs, target, mode)
-      } catch (er) {
-        if (!chownErOk(er)) throw er
-      }
-    }
-  }
-
-
-  function chownFix (orig) {
-    if (!orig) return orig
-    return function (target, uid, gid, cb) {
-      return orig.call(fs, target, uid, gid, function (er) {
-        if (chownErOk(er)) er = null
-        if (cb) cb.apply(this, arguments)
-      })
-    }
-  }
-
-  function chownFixSync (orig) {
-    if (!orig) return orig
-    return function (target, uid, gid) {
-      try {
-        return orig.call(fs, target, uid, gid)
-      } catch (er) {
-        if (!chownErOk(er)) throw er
-      }
-    }
-  }
-
-  function statFix (orig) {
-    if (!orig) return orig
-    // Older versions of Node erroneously returned signed integers for
-    // uid + gid.
-    return function (target, options, cb) {
-      if (typeof options === 'function') {
-        cb = options
-        options = null
-      }
-      function callback (er, stats) {
-        if (stats) {
-          if (stats.uid < 0) stats.uid += 0x100000000
-          if (stats.gid < 0) stats.gid += 0x100000000
-        }
-        if (cb) cb.apply(this, arguments)
-      }
-      return options ? orig.call(fs, target, options, callback)
-        : orig.call(fs, target, callback)
-    }
-  }
-
-  function statFixSync (orig) {
-    if (!orig) return orig
-    // Older versions of Node erroneously returned signed integers for
-    // uid + gid.
-    return function (target, options) {
-      var stats = options ? orig.call(fs, target, options)
-        : orig.call(fs, target)
-      if (stats) {
-        if (stats.uid < 0) stats.uid += 0x100000000
-        if (stats.gid < 0) stats.gid += 0x100000000
-      }
-      return stats;
-    }
-  }
-
-  // ENOSYS means that the fs doesn't support the op. Just ignore
-  // that, because it doesn't matter.
-  //
-  // if there's no getuid, or if getuid() is something other
-  // than 0, and the error is EINVAL or EPERM, then just ignore
-  // it.
-  //
-  // This specific case is a silent failure in cp, install, tar,
-  // and most other unix tools that manage permissions.
-  //
-  // When running as root, or if other types of errors are
-  // encountered, then it's strict.
-  function chownErOk (er) {
-    if (!er)
-      return true
-
-    if (er.code === "ENOSYS")
-      return true
-
-    var nonroot = !process.getuid || process.getuid() !== 0
-    if (nonroot) {
-      if (er.code === "EINVAL" || er.code === "EPERM")
-        return true
-    }
-
-    return false
-  }
-}
-
-
-/***/ }),
-
-/***/ 880:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-"use strict";
-
-const fs = __nccwpck_require__(552)
-const path = __nccwpck_require__(17)
-
-function klawSync (dir, opts, ls) {
-  if (!ls) {
-    ls = []
-    dir = path.resolve(dir)
-    opts = opts || {}
-    opts.fs = opts.fs || fs
-    if (opts.depthLimit > -1) opts.rootDepth = dir.split(path.sep).length + 1
-  }
-  const paths = opts.fs.readdirSync(dir).map(p => dir + path.sep + p)
-  for (var i = 0; i < paths.length; i += 1) {
-    const pi = paths[i]
-    const st = opts.fs.statSync(pi)
-    const item = {path: pi, stats: st}
-    const isUnderDepthLimit = (!opts.rootDepth || pi.split(path.sep).length - opts.rootDepth < opts.depthLimit)
-    const filterResult = opts.filter ? opts.filter(item) : true
-    const isDir = st.isDirectory()
-    const shouldAdd = filterResult && (isDir ? !opts.nodir : !opts.nofile)
-    const shouldTraverse = isDir && isUnderDepthLimit && (opts.traverseAll || filterResult)
-    if (shouldAdd) ls.push(item)
-    if (shouldTraverse) ls = klawSync(pi, opts, ls)
-  }
-  return ls
-}
-
-module.exports = klawSync
 
 
 /***/ }),
@@ -2798,7 +1796,6 @@ module.exports = __nccwpck_require__(418);
 /***/ 418:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 var net = __nccwpck_require__(808);
@@ -3070,7 +2067,6 @@ exports.debug = debug; // for test
 /***/ 972:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3156,7 +2152,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /***/ 374:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3186,7 +2181,6 @@ exports["default"] = _default;
 /***/ 110:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3201,7 +2195,6 @@ exports["default"] = _default;
 /***/ 713:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3253,7 +2246,6 @@ exports["default"] = _default;
 /***/ 496:
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3268,7 +2260,6 @@ exports["default"] = _default;
 /***/ 127:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3299,7 +2290,6 @@ function rng() {
 /***/ 170:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3329,7 +2319,6 @@ exports["default"] = _default;
 /***/ 997:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3375,7 +2364,6 @@ exports["default"] = _default;
 /***/ 265:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3489,7 +2477,6 @@ exports["default"] = _default;
 /***/ 203:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3512,7 +2499,6 @@ exports["default"] = _default;
 /***/ 952:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3597,7 +2583,6 @@ function _default(name, version, hashfunc) {
 /***/ 222:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3641,7 +2626,6 @@ exports["default"] = _default;
 /***/ 193:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3664,7 +2648,6 @@ exports["default"] = _default;
 /***/ 350:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3688,7 +2671,6 @@ exports["default"] = _default;
 /***/ 988:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-"use strict";
 
 
 Object.defineProperty(exports, "__esModule", ({
@@ -3716,231 +2698,1759 @@ exports["default"] = _default;
 /***/ 491:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("assert");
-
-/***/ }),
-
-/***/ 57:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("constants");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("assert");
 
 /***/ }),
 
 /***/ 113:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("crypto");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("crypto");
 
 /***/ }),
 
 /***/ 361:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("events");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("events");
 
 /***/ }),
 
 /***/ 147:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("fs");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
 
 /***/ }),
 
 /***/ 685:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("http");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("http");
 
 /***/ }),
 
 /***/ 687:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("https");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("https");
 
 /***/ }),
 
 /***/ 808:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("net");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("net");
 
 /***/ }),
 
 /***/ 37:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("os");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
 
 /***/ }),
 
 /***/ 17:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("path");
-
-/***/ }),
-
-/***/ 781:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("stream");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("path");
 
 /***/ }),
 
 /***/ 404:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("tls");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("tls");
 
 /***/ }),
 
 /***/ 837:
 /***/ ((module) => {
 
-"use strict";
-module.exports = require("util");
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 
 /***/ })
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __nccwpck_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		var threw = true;
-/******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
-/******/ 			threw = false;
-/******/ 		} finally {
-/******/ 			if(threw) delete __webpack_module_cache__[moduleId];
-/******/ 		}
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __nccwpck_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	var threw = true;
+/******/ 	try {
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
+/******/ 		threw = false;
+/******/ 	} finally {
+/******/ 		if(threw) delete __webpack_module_cache__[moduleId];
+/******/ 	}
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat */
-/******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/ 	
+/******/ /* webpack/runtime/compat */
+/******/ 
+/******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(17);
-/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(path__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(117);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var klaw_sync__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(880);
-/* harmony import */ var klaw_sync__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(klaw_sync__WEBPACK_IMPORTED_MODULE_3__);
+
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(147);
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(17);
+// EXTERNAL MODULE: ../../node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(117);
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
+;// CONCATENATED MODULE: external "node:path"
+const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
+;// CONCATENATED MODULE: external "node:process"
+const external_node_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:process");
+;// CONCATENATED MODULE: external "url"
+const external_url_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("url");
+// EXTERNAL MODULE: ../../node_modules/is-buffer/index.js
+var is_buffer = __nccwpck_require__(324);
+;// CONCATENATED MODULE: ../../node_modules/unist-util-stringify-position/lib/index.js
+/**
+ * @typedef {import('unist').Node} Node
+ * @typedef {import('unist').Point} Point
+ * @typedef {import('unist').Position} Position
+ */
+
+/**
+ * @typedef NodeLike
+ * @property {string} type
+ * @property {PositionLike | null | undefined} [position]
+ *
+ * @typedef PositionLike
+ * @property {PointLike | null | undefined} [start]
+ * @property {PointLike | null | undefined} [end]
+ *
+ * @typedef PointLike
+ * @property {number | null | undefined} [line]
+ * @property {number | null | undefined} [column]
+ * @property {number | null | undefined} [offset]
+ */
+
+/**
+ * Serialize the positional info of a point, position (start and end points),
+ * or node.
+ *
+ * @param {Node | NodeLike | Position | PositionLike | Point | PointLike | null | undefined} [value]
+ *   Node, position, or point.
+ * @returns {string}
+ *   Pretty printed positional info of a node (`string`).
+ *
+ *   In the format of a range `ls:cs-le:ce` (when given `node` or `position`)
+ *   or a point `l:c` (when given `point`), where `l` stands for line, `c` for
+ *   column, `s` for `start`, and `e` for end.
+ *   An empty string (`''`) is returned if the given value is neither `node`,
+ *   `position`, nor `point`.
+ */
+function stringifyPosition(value) {
+  // Nothing.
+  if (!value || typeof value !== 'object') {
+    return ''
+  }
+
+  // Node.
+  if ('position' in value || 'type' in value) {
+    return position(value.position)
+  }
+
+  // Position.
+  if ('start' in value || 'end' in value) {
+    return position(value)
+  }
+
+  // Point.
+  if ('line' in value || 'column' in value) {
+    return point(value)
+  }
+
+  // ?
+  return ''
+}
+
+/**
+ * @param {Point | PointLike | null | undefined} point
+ * @returns {string}
+ */
+function point(point) {
+  return index(point && point.line) + ':' + index(point && point.column)
+}
+
+/**
+ * @param {Position | PositionLike | null | undefined} pos
+ * @returns {string}
+ */
+function position(pos) {
+  return point(pos && pos.start) + '-' + point(pos && pos.end)
+}
+
+/**
+ * @param {number | null | undefined} value
+ * @returns {number}
+ */
+function index(value) {
+  return value && typeof value === 'number' ? value : 1
+}
+
+;// CONCATENATED MODULE: ../../node_modules/vfile-message/lib/index.js
+/**
+ * @typedef {import('unist').Node} Node
+ * @typedef {import('unist').Position} Position
+ * @typedef {import('unist').Point} Point
+ * @typedef {object & {type: string, position?: Position | undefined}} NodeLike
+ */
+
+
+
+/**
+ * Message.
+ */
+class VFileMessage extends Error {
+  /**
+   * Create a message for `reason` at `place` from `origin`.
+   *
+   * When an error is passed in as `reason`, the `stack` is copied.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   *
+   *   > 👉 **Note**: you should use markdown.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns
+   *   Instance of `VFileMessage`.
+   */
+  // To do: next major: expose `undefined` everywhere instead of `null`.
+  constructor(reason, place, origin) {
+    /** @type {[string | null, string | null]} */
+    const parts = [null, null]
+    /** @type {Position} */
+    let position = {
+      // @ts-expect-error: we always follows the structure of `position`.
+      start: {line: null, column: null},
+      // @ts-expect-error: "
+      end: {line: null, column: null}
+    }
+
+    super()
+
+    if (typeof place === 'string') {
+      origin = place
+      place = undefined
+    }
+
+    if (typeof origin === 'string') {
+      const index = origin.indexOf(':')
+
+      if (index === -1) {
+        parts[1] = origin
+      } else {
+        parts[0] = origin.slice(0, index)
+        parts[1] = origin.slice(index + 1)
+      }
+    }
+
+    if (place) {
+      // Node.
+      if ('type' in place || 'position' in place) {
+        if (place.position) {
+          // To do: next major: deep clone.
+          // @ts-expect-error: looks like a position.
+          position = place.position
+        }
+      }
+      // Position.
+      else if ('start' in place || 'end' in place) {
+        // @ts-expect-error: looks like a position.
+        // To do: next major: deep clone.
+        position = place
+      }
+      // Point.
+      else if ('line' in place || 'column' in place) {
+        // To do: next major: deep clone.
+        position.start = place
+      }
+    }
+
+    // Fields from `Error`.
+    /**
+     * Serialized positional info of error.
+     *
+     * On normal errors, this would be something like `ParseError`, buit in
+     * `VFile` messages we use this space to show where an error happened.
+     */
+    this.name = stringifyPosition(place) || '1:1'
+
+    /**
+     * Reason for message.
+     *
+     * @type {string}
+     */
+    this.message = typeof reason === 'object' ? reason.message : reason
+
+    /**
+     * Stack of message.
+     *
+     * This is used by normal errors to show where something happened in
+     * programming code, irrelevant for `VFile` messages,
+     *
+     * @type {string}
+     */
+    this.stack = ''
+
+    if (typeof reason === 'object' && reason.stack) {
+      this.stack = reason.stack
+    }
+
+    /**
+     * Reason for message.
+     *
+     * > 👉 **Note**: you should use markdown.
+     *
+     * @type {string}
+     */
+    this.reason = this.message
+
+    /* eslint-disable no-unused-expressions */
+    /**
+     * State of problem.
+     *
+     * * `true` — marks associated file as no longer processable (error)
+     * * `false` — necessitates a (potential) change (warning)
+     * * `null | undefined` — for things that might not need changing (info)
+     *
+     * @type {boolean | null | undefined}
+     */
+    this.fatal
+
+    /**
+     * Starting line of error.
+     *
+     * @type {number | null}
+     */
+    this.line = position.start.line
+
+    /**
+     * Starting column of error.
+     *
+     * @type {number | null}
+     */
+    this.column = position.start.column
+
+    /**
+     * Full unist position.
+     *
+     * @type {Position | null}
+     */
+    this.position = position
+
+    /**
+     * Namespace of message (example: `'my-package'`).
+     *
+     * @type {string | null}
+     */
+    this.source = parts[0]
+
+    /**
+     * Category of message (example: `'my-rule'`).
+     *
+     * @type {string | null}
+     */
+    this.ruleId = parts[1]
+
+    /**
+     * Path of a file (used throughout the `VFile` ecosystem).
+     *
+     * @type {string | null}
+     */
+    this.file
+
+    // The following fields are “well known”.
+    // Not standard.
+    // Feel free to add other non-standard fields to your messages.
+
+    /**
+     * Specify the source value that’s being reported, which is deemed
+     * incorrect.
+     *
+     * @type {string | null}
+     */
+    this.actual
+
+    /**
+     * Suggest acceptable values that can be used instead of `actual`.
+     *
+     * @type {Array<string> | null}
+     */
+    this.expected
+
+    /**
+     * Link to docs for the message.
+     *
+     * > 👉 **Note**: this must be an absolute URL that can be passed as `x`
+     * > to `new URL(x)`.
+     *
+     * @type {string | null}
+     */
+    this.url
+
+    /**
+     * Long form description of the message (you should use markdown).
+     *
+     * @type {string | null}
+     */
+    this.note
+    /* eslint-enable no-unused-expressions */
+  }
+}
+
+VFileMessage.prototype.file = ''
+VFileMessage.prototype.name = ''
+VFileMessage.prototype.reason = ''
+VFileMessage.prototype.message = ''
+VFileMessage.prototype.stack = ''
+VFileMessage.prototype.fatal = null
+VFileMessage.prototype.column = null
+VFileMessage.prototype.line = null
+VFileMessage.prototype.source = null
+VFileMessage.prototype.ruleId = null
+VFileMessage.prototype.position = null
+
+;// CONCATENATED MODULE: external "process"
+const external_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("process");
+;// CONCATENATED MODULE: ../../node_modules/vfile/lib/minurl.shared.js
+/**
+ * @typedef URL
+ * @property {string} hash
+ * @property {string} host
+ * @property {string} hostname
+ * @property {string} href
+ * @property {string} origin
+ * @property {string} password
+ * @property {string} pathname
+ * @property {string} port
+ * @property {string} protocol
+ * @property {string} search
+ * @property {any} searchParams
+ * @property {string} username
+ * @property {() => string} toString
+ * @property {() => string} toJSON
+ */
+
+/**
+ * Check if `fileUrlOrPath` looks like a URL.
+ *
+ * @param {unknown} fileUrlOrPath
+ *   File path or URL.
+ * @returns {fileUrlOrPath is URL}
+ *   Whether it’s a URL.
+ */
+// From: <https://github.com/nodejs/node/blob/fcf8ba4/lib/internal/url.js#L1501>
+function isUrl(fileUrlOrPath) {
+  return (
+    fileUrlOrPath !== null &&
+    typeof fileUrlOrPath === 'object' &&
+    // @ts-expect-error: indexable.
+    fileUrlOrPath.href &&
+    // @ts-expect-error: indexable.
+    fileUrlOrPath.origin
+  )
+}
+
+;// CONCATENATED MODULE: ../../node_modules/vfile/lib/index.js
+/**
+ * @typedef {import('unist').Node} Node
+ * @typedef {import('unist').Position} Position
+ * @typedef {import('unist').Point} Point
+ * @typedef {import('./minurl.shared.js').URL} URL
+ * @typedef {import('../index.js').Data} Data
+ * @typedef {import('../index.js').Value} Value
+ */
+
+/**
+ * @typedef {Record<string, unknown> & {type: string, position?: Position | undefined}} NodeLike
+ *
+ * @typedef {'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex'} BufferEncoding
+ *   Encodings supported by the buffer class.
+ *
+ *   This is a copy of the types from Node, copied to prevent Node globals from
+ *   being needed.
+ *   Copied from: <https://github.com/DefinitelyTyped/DefinitelyTyped/blob/90a4ec8/types/node/buffer.d.ts#L170>
+ *
+ * @typedef {Options | URL | Value | VFile} Compatible
+ *   Things that can be passed to the constructor.
+ *
+ * @typedef VFileCoreOptions
+ *   Set multiple values.
+ * @property {Value | null | undefined} [value]
+ *   Set `value`.
+ * @property {string | null | undefined} [cwd]
+ *   Set `cwd`.
+ * @property {Array<string> | null | undefined} [history]
+ *   Set `history`.
+ * @property {URL | string | null | undefined} [path]
+ *   Set `path`.
+ * @property {string | null | undefined} [basename]
+ *   Set `basename`.
+ * @property {string | null | undefined} [stem]
+ *   Set `stem`.
+ * @property {string | null | undefined} [extname]
+ *   Set `extname`.
+ * @property {string | null | undefined} [dirname]
+ *   Set `dirname`.
+ * @property {Data | null | undefined} [data]
+ *   Set `data`.
+ *
+ * @typedef Map
+ *   Raw source map.
+ *
+ *   See:
+ *   <https://github.com/mozilla/source-map/blob/58819f0/source-map.d.ts#L15-L23>.
+ * @property {number} version
+ *   Which version of the source map spec this map is following.
+ * @property {Array<string>} sources
+ *   An array of URLs to the original source files.
+ * @property {Array<string>} names
+ *   An array of identifiers which can be referenced by individual mappings.
+ * @property {string | undefined} [sourceRoot]
+ *   The URL root from which all sources are relative.
+ * @property {Array<string> | undefined} [sourcesContent]
+ *   An array of contents of the original source files.
+ * @property {string} mappings
+ *   A string of base64 VLQs which contain the actual mappings.
+ * @property {string} file
+ *   The generated file this source map is associated with.
+ *
+ * @typedef {{[key: string]: unknown} & VFileCoreOptions} Options
+ *   Configuration.
+ *
+ *   A bunch of keys that will be shallow copied over to the new file.
+ *
+ * @typedef {Record<string, unknown>} ReporterSettings
+ *   Configuration for reporters.
+ */
+
+/**
+ * @template {ReporterSettings} Settings
+ *   Options type.
+ * @callback Reporter
+ *   Type for a reporter.
+ * @param {Array<VFile>} files
+ *   Files to report.
+ * @param {Settings} options
+ *   Configuration.
+ * @returns {string}
+ *   Report.
+ */
+
+
+
+
+
+
+
+/**
+ * Order of setting (least specific to most), we need this because otherwise
+ * `{stem: 'a', path: '~/b.js'}` would throw, as a path is needed before a
+ * stem can be set.
+ *
+ * @type {Array<'basename' | 'dirname' | 'extname' | 'history' | 'path' | 'stem'>}
+ */
+const order = ['history', 'path', 'basename', 'stem', 'extname', 'dirname']
+
+class VFile {
+  /**
+   * Create a new virtual file.
+   *
+   * `options` is treated as:
+   *
+   * *   `string` or `Buffer` — `{value: options}`
+   * *   `URL` — `{path: options}`
+   * *   `VFile` — shallow copies its data over to the new file
+   * *   `object` — all fields are shallow copied over to the new file
+   *
+   * Path related fields are set in the following order (least specific to
+   * most specific): `history`, `path`, `basename`, `stem`, `extname`,
+   * `dirname`.
+   *
+   * You cannot set `dirname` or `extname` without setting either `history`,
+   * `path`, `basename`, or `stem` too.
+   *
+   * @param {Compatible | null | undefined} [value]
+   *   File value.
+   * @returns
+   *   New instance.
+   */
+  constructor(value) {
+    /** @type {Options | VFile} */
+    let options
+
+    if (!value) {
+      options = {}
+    } else if (typeof value === 'string' || buffer(value)) {
+      options = {value}
+    } else if (isUrl(value)) {
+      options = {path: value}
+    } else {
+      options = value
+    }
+
+    /**
+     * Place to store custom information (default: `{}`).
+     *
+     * It’s OK to store custom data directly on the file but moving it to
+     * `data` is recommended.
+     *
+     * @type {Data}
+     */
+    this.data = {}
+
+    /**
+     * List of messages associated with the file.
+     *
+     * @type {Array<VFileMessage>}
+     */
+    this.messages = []
+
+    /**
+     * List of filepaths the file moved between.
+     *
+     * The first is the original path and the last is the current path.
+     *
+     * @type {Array<string>}
+     */
+    this.history = []
+
+    /**
+     * Base of `path` (default: `process.cwd()` or `'/'` in browsers).
+     *
+     * @type {string}
+     */
+    this.cwd = external_process_namespaceObject.cwd()
+
+    /* eslint-disable no-unused-expressions */
+    /**
+     * Raw value.
+     *
+     * @type {Value}
+     */
+    this.value
+
+    // The below are non-standard, they are “well-known”.
+    // As in, used in several tools.
+
+    /**
+     * Whether a file was saved to disk.
+     *
+     * This is used by vfile reporters.
+     *
+     * @type {boolean}
+     */
+    this.stored
+
+    /**
+     * Custom, non-string, compiled, representation.
+     *
+     * This is used by unified to store non-string results.
+     * One example is when turning markdown into React nodes.
+     *
+     * @type {unknown}
+     */
+    this.result
+
+    /**
+     * Source map.
+     *
+     * This type is equivalent to the `RawSourceMap` type from the `source-map`
+     * module.
+     *
+     * @type {Map | null | undefined}
+     */
+    this.map
+    /* eslint-enable no-unused-expressions */
+
+    // Set path related properties in the correct order.
+    let index = -1
+
+    while (++index < order.length) {
+      const prop = order[index]
+
+      // Note: we specifically use `in` instead of `hasOwnProperty` to accept
+      // `vfile`s too.
+      if (
+        prop in options &&
+        options[prop] !== undefined &&
+        options[prop] !== null
+      ) {
+        // @ts-expect-error: TS doesn’t understand basic reality.
+        this[prop] = prop === 'history' ? [...options[prop]] : options[prop]
+      }
+    }
+
+    /** @type {string} */
+    let prop
+
+    // Set non-path related properties.
+    for (prop in options) {
+      // @ts-expect-error: fine to set other things.
+      if (!order.includes(prop)) {
+        // @ts-expect-error: fine to set other things.
+        this[prop] = options[prop]
+      }
+    }
+  }
+
+  /**
+   * Get the full path (example: `'~/index.min.js'`).
+   *
+   * @returns {string}
+   */
+  get path() {
+    return this.history[this.history.length - 1]
+  }
+
+  /**
+   * Set the full path (example: `'~/index.min.js'`).
+   *
+   * Cannot be nullified.
+   * You can set a file URL (a `URL` object with a `file:` protocol) which will
+   * be turned into a path with `url.fileURLToPath`.
+   *
+   * @param {string | URL} path
+   */
+  set path(path) {
+    if (isUrl(path)) {
+      path = (0,external_url_namespaceObject.fileURLToPath)(path)
+    }
+
+    assertNonEmpty(path, 'path')
+
+    if (this.path !== path) {
+      this.history.push(path)
+    }
+  }
+
+  /**
+   * Get the parent path (example: `'~'`).
+   */
+  get dirname() {
+    return typeof this.path === 'string' ? external_path_.dirname(this.path) : undefined
+  }
+
+  /**
+   * Set the parent path (example: `'~'`).
+   *
+   * Cannot be set if there’s no `path` yet.
+   */
+  set dirname(dirname) {
+    assertPath(this.basename, 'dirname')
+    this.path = external_path_.join(dirname || '', this.basename)
+  }
+
+  /**
+   * Get the basename (including extname) (example: `'index.min.js'`).
+   */
+  get basename() {
+    return typeof this.path === 'string' ? external_path_.basename(this.path) : undefined
+  }
+
+  /**
+   * Set basename (including extname) (`'index.min.js'`).
+   *
+   * Cannot contain path separators (`'/'` on unix, macOS, and browsers, `'\'`
+   * on windows).
+   * Cannot be nullified (use `file.path = file.dirname` instead).
+   */
+  set basename(basename) {
+    assertNonEmpty(basename, 'basename')
+    assertPart(basename, 'basename')
+    this.path = external_path_.join(this.dirname || '', basename)
+  }
+
+  /**
+   * Get the extname (including dot) (example: `'.js'`).
+   */
+  get extname() {
+    return typeof this.path === 'string' ? external_path_.extname(this.path) : undefined
+  }
+
+  /**
+   * Set the extname (including dot) (example: `'.js'`).
+   *
+   * Cannot contain path separators (`'/'` on unix, macOS, and browsers, `'\'`
+   * on windows).
+   * Cannot be set if there’s no `path` yet.
+   */
+  set extname(extname) {
+    assertPart(extname, 'extname')
+    assertPath(this.dirname, 'extname')
+
+    if (extname) {
+      if (extname.charCodeAt(0) !== 46 /* `.` */) {
+        throw new Error('`extname` must start with `.`')
+      }
+
+      if (extname.includes('.', 1)) {
+        throw new Error('`extname` cannot contain multiple dots')
+      }
+    }
+
+    this.path = external_path_.join(this.dirname, this.stem + (extname || ''))
+  }
+
+  /**
+   * Get the stem (basename w/o extname) (example: `'index.min'`).
+   */
+  get stem() {
+    return typeof this.path === 'string'
+      ? external_path_.basename(this.path, this.extname)
+      : undefined
+  }
+
+  /**
+   * Set the stem (basename w/o extname) (example: `'index.min'`).
+   *
+   * Cannot contain path separators (`'/'` on unix, macOS, and browsers, `'\'`
+   * on windows).
+   * Cannot be nullified (use `file.path = file.dirname` instead).
+   */
+  set stem(stem) {
+    assertNonEmpty(stem, 'stem')
+    assertPart(stem, 'stem')
+    this.path = external_path_.join(this.dirname || '', stem + (this.extname || ''))
+  }
+
+  /**
+   * Serialize the file.
+   *
+   * @param {BufferEncoding | null | undefined} [encoding='utf8']
+   *   Character encoding to understand `value` as when it’s a `Buffer`
+   *   (default: `'utf8'`).
+   * @returns {string}
+   *   Serialized file.
+   */
+  toString(encoding) {
+    return (this.value || '').toString(encoding || undefined)
+  }
+
+  /**
+   * Create a warning message associated with the file.
+   *
+   * Its `fatal` is set to `false` and `file` is set to the current file path.
+   * Its added to `file.messages`.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns {VFileMessage}
+   *   Message.
+   */
+  message(reason, place, origin) {
+    const message = new VFileMessage(reason, place, origin)
+
+    if (this.path) {
+      message.name = this.path + ':' + message.name
+      message.file = this.path
+    }
+
+    message.fatal = false
+
+    this.messages.push(message)
+
+    return message
+  }
+
+  /**
+   * Create an info message associated with the file.
+   *
+   * Its `fatal` is set to `null` and `file` is set to the current file path.
+   * Its added to `file.messages`.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns {VFileMessage}
+   *   Message.
+   */
+  info(reason, place, origin) {
+    const message = this.message(reason, place, origin)
+
+    message.fatal = null
+
+    return message
+  }
+
+  /**
+   * Create a fatal error associated with the file.
+   *
+   * Its `fatal` is set to `true` and `file` is set to the current file path.
+   * Its added to `file.messages`.
+   *
+   * > 👉 **Note**: a fatal error means that a file is no longer processable.
+   *
+   * @param {string | Error | VFileMessage} reason
+   *   Reason for message, uses the stack and message of the error if given.
+   * @param {Node | NodeLike | Position | Point | null | undefined} [place]
+   *   Place in file where the message occurred.
+   * @param {string | null | undefined} [origin]
+   *   Place in code where the message originates (example:
+   *   `'my-package:my-rule'` or `'my-rule'`).
+   * @returns {never}
+   *   Message.
+   * @throws {VFileMessage}
+   *   Message.
+   */
+  fail(reason, place, origin) {
+    const message = this.message(reason, place, origin)
+
+    message.fatal = true
+
+    throw message
+  }
+}
+
+/**
+ * Assert that `part` is not a path (as in, does not contain `path.sep`).
+ *
+ * @param {string | null | undefined} part
+ *   File path part.
+ * @param {string} name
+ *   Part name.
+ * @returns {void}
+ *   Nothing.
+ */
+function assertPart(part, name) {
+  if (part && part.includes(external_path_.sep)) {
+    throw new Error(
+      '`' + name + '` cannot be a path: did not expect `' + external_path_.sep + '`'
+    )
+  }
+}
+
+/**
+ * Assert that `part` is not empty.
+ *
+ * @param {string | undefined} part
+ *   Thing.
+ * @param {string} name
+ *   Part name.
+ * @returns {asserts part is string}
+ *   Nothing.
+ */
+function assertNonEmpty(part, name) {
+  if (!part) {
+    throw new Error('`' + name + '` cannot be empty')
+  }
+}
+
+/**
+ * Assert `path` exists.
+ *
+ * @param {string | undefined} path
+ *   Path.
+ * @param {string} name
+ *   Dependency name.
+ * @returns {asserts path is string}
+ *   Nothing.
+ */
+function assertPath(path, name) {
+  if (!path) {
+    throw new Error('Setting `' + name + '` requires `path` to be set too')
+  }
+}
+
+/**
+ * Assert `value` is a buffer.
+ *
+ * @param {unknown} value
+ *   thing.
+ * @returns {value is Buffer}
+ *   Whether `value` is a Node.js buffer.
+ */
+function buffer(value) {
+  return is_buffer(value)
+}
+
+;// CONCATENATED MODULE: ../../node_modules/to-vfile/lib/index.js
+/**
+ * @typedef {import('vfile').VFileValue} Value
+ * @typedef {import('vfile').VFileOptions} Options
+ * @typedef {import('vfile').BufferEncoding} BufferEncoding
+ *   Encodings supported by the buffer class.
+ *
+ *   This is a copy of the types from Node and `VFile`.
+ *
+ * @typedef ReadOptions
+ *   Configuration for `fs.readFile`.
+ * @property {BufferEncoding | null | undefined} [encoding]
+ *   Encoding to read file as, will turn `file.value` into a string if passed.
+ * @property {string | undefined} [flag]
+ *   File system flags to use.
+ *
+ * @typedef WriteOptions
+ *   Configuration for `fs.writeFile`.
+ * @property {BufferEncoding | null | undefined} [encoding]
+ *   Encoding to write file as.
+ * @property {number | string | undefined} [mode]
+ *   File mode (permission and sticky bits) if the file was newly created.
+ * @property {string | undefined} [flag]
+ *   File system flags to use.
+ *
+ * @typedef {URL | Value} Path
+ *   URL to file or path to file.
+ *
+ *   > 👉 **Note**: `Value` is used here because it’s a smarter `Buffer`
+ * @typedef {Path | Options | VFile} Compatible
+ *   URL to file, path to file, options for file, or actual file.
+ */
+
+/**
+ * @callback Callback
+ *   Callback called after reading or writing a file.
+ * @param {NodeJS.ErrnoException | null} error
+ *   Error when reading or writing was not successful.
+ * @param {VFile | null | undefined} file
+ *   File when reading or writing was successful.
+ */
+
+
+
+
+
+
+
+// To do: next major: use `node:` prefix.
+// To do: next major: use `URL` from global.
+// To do: next major: Only pass `undefined`.
+
+/**
+ * Create a virtual file from a description.
+ *
+ * This is like `VFile`, but it accepts a file path instead of file cotnents.
+ *
+ * If `options` is a string, URL, or buffer, it’s used as the path.
+ * Otherwise, if it’s a file, that’s returned instead.
+ * Otherwise, the options are passed through to `new VFile()`.
+ *
+ * @param {Compatible | null | undefined} [description]
+ *   Path to file, file options, or file itself.
+ * @returns {VFile}
+ *   Given file or new file.
+ */
+function toVFile(description) {
+  if (typeof description === 'string' || description instanceof external_url_namespaceObject.URL) {
+    description = {path: description}
+  } else if (is_buffer(description)) {
+    description = {path: String(description)}
+  }
+
+  return looksLikeAVFile(description)
+    ? description
+    : // To do: remove when `VFile` allows explicit `null`.
+      new VFile(description || undefined)
+}
+
+/**
+ * Create a virtual file and read it in, synchronously.
+ *
+ * @param {Compatible} description
+ *   Path to file, file options, or file itself.
+ * @param {BufferEncoding | ReadOptions | null | undefined} [options]
+ *   Encoding to use or Node.JS read options.
+ * @returns {VFile}
+ *   Given file or new file.
+ */
+function readSync(description, options) {
+  const file = toVFile(description)
+  file.value = external_fs_.readFileSync(external_path_.resolve(file.cwd, file.path), options)
+  return file
+}
+
+/**
+ * Create a virtual file and write it, synchronously.
+ *
+ * @param {Compatible} description
+ *   Path to file, file options, or file itself.
+ * @param {BufferEncoding | WriteOptions | null | undefined} [options]
+ *   Encoding to use or Node.JS write options.
+ * @returns {VFile}
+ *   Given file or new file.
+ */
+function writeSync(description, options) {
+  const file = toVFile(description)
+  external_fs_.writeFileSync(external_path_.resolve(file.cwd, file.path), file.value || '', options)
+  return file
+}
+
+/**
+ * Create a virtual file and read it in, async.
+ *
+ * @param description
+ *   Path to file, file options, or file itself.
+ * @param options
+ *   Encoding to use or Node.JS read options.
+ * @param callback
+ *   Callback called when done.
+ * @returns
+ *   Nothing when a callback is given, otherwise promise that resolves to given
+ *   file or new file.
+ */
+const read =
+  /**
+   * @type {{
+   *   (description: Compatible, options: BufferEncoding | ReadOptions | null | undefined, callback: Callback): void
+   *   (description: Compatible, callback: Callback): void
+   *   (description: Compatible, options?: BufferEncoding | ReadOptions | null | undefined): Promise<VFile>
+   * }}
+   */
+  (
+    /**
+     * @param {Compatible} description
+     * @param {BufferEncoding | ReadOptions | null | undefined} [options]
+     * @param {Callback | null | undefined} [callback]
+     */
+    function (description, options, callback) {
+      const file = toVFile(description)
+
+      if (!callback && typeof options === 'function') {
+        callback = options
+        options = null
+      }
+
+      if (!callback) {
+        return new Promise(executor)
+      }
+
+      executor(resolve, callback)
+
+      /**
+       * @param {VFile} result
+       */
+      function resolve(result) {
+        // @ts-expect-error: `callback` always defined.
+        callback(null, result)
+      }
+
+      /**
+       * @param {(error: VFile) => void} resolve
+       * @param {(error: NodeJS.ErrnoException, file?: VFile | undefined) => void} reject
+       */
+      function executor(resolve, reject) {
+        /** @type {string} */
+        let fp
+
+        try {
+          fp = external_path_.resolve(file.cwd, file.path)
+        } catch (error) {
+          const exception = /** @type {NodeJS.ErrnoException} */ (error)
+          return reject(exception)
+        }
+
+        external_fs_.readFile(fp, options, done)
+
+        /**
+         * @param {NodeJS.ErrnoException | null} error
+         * @param {Value} result
+         */
+        function done(error, result) {
+          if (error) {
+            reject(error)
+          } else {
+            file.value = result
+            resolve(file)
+          }
+        }
+      }
+    }
+  )
+
+/**
+ * Create a virtual file and write it, async.
+ *
+ * @param description
+ *   Path to file, file options, or file itself.
+ * @param options
+ *   Encoding to use or Node.JS write options.
+ * @param callback
+ *   Callback called when done.
+ * @returns
+ *   Nothing when a callback is given, otherwise promise that resolves to given
+ *   file or new file.
+ */
+const write =
+  /**
+   * @type {{
+   *   (description: Compatible, options: BufferEncoding | WriteOptions | null | undefined, callback: Callback): void
+   *   (description: Compatible, callback: Callback): void
+   *   (description: Compatible, options?: BufferEncoding | WriteOptions | null | undefined): Promise<VFile>
+   * }}
+   */
+  (
+    /**
+     * @param {Compatible} description
+     * @param {BufferEncoding | WriteOptions | null | undefined} [options]
+     * @param {Callback | null | undefined} [callback]
+     */
+    function (description, options, callback) {
+      const file = toVFile(description)
+
+      // Weird, right? Otherwise `fs` doesn’t accept it.
+      if (!callback && typeof options === 'function') {
+        callback = options
+        options = undefined
+      }
+
+      if (!callback) {
+        return new Promise(executor)
+      }
+
+      executor(resolve, callback)
+
+      /**
+       * @param {VFile} result
+       */
+      function resolve(result) {
+        // @ts-expect-error: `callback` always defined.
+        callback(null, result)
+      }
+
+      /**
+       * @param {(error: VFile) => void} resolve
+       * @param {(error: NodeJS.ErrnoException, file: VFile | null) => void} reject
+       */
+      function executor(resolve, reject) {
+        /** @type {string} */
+        let fp
+
+        try {
+          fp = external_path_.resolve(file.cwd, file.path)
+        } catch (error) {
+          const exception = /** @type {NodeJS.ErrnoException} */ (error)
+          return reject(exception, null)
+        }
+
+        external_fs_.writeFile(fp, file.value || '', options || null, done)
+
+        /**
+         * @param {NodeJS.ErrnoException | null} error
+         */
+        function done(error) {
+          if (error) {
+            reject(error, null)
+          } else {
+            resolve(file)
+          }
+        }
+      }
+    }
+  )
+
+/**
+ * Check if something looks like a vfile.
+ *
+ * @param {Compatible | null | undefined} value
+ *   Value.
+ * @returns {value is VFile}
+ *   Whether `value` looks like a `VFile`.
+ */
+function looksLikeAVFile(value) {
+  return Boolean(
+    value &&
+      typeof value === 'object' &&
+      'message' in value &&
+      'messages' in value
+  )
+}
+
+// To do: next major: remove?
+toVFile.readSync = readSync
+toVFile.writeSync = writeSync
+toVFile.read = read
+toVFile.write = write
+
+;// CONCATENATED MODULE: ../../node_modules/vfile-find-down/lib/index.js
+/**
+ * @typedef {import('vfile').VFile} VFile
+ */
+
+/**
+ * @callback Assert
+ *   Handle a file.
+ * @param {VFile} file
+ *   File to handle.
+ * @param {fs.Stats} stats
+ *   Stats from `fs.stat`.
+ * @returns {boolean | null | number | undefined | void}
+ *   How to handle this file.
+ *
+ *   Booleans are treated as `INCLUDE` (when `true`) or `SKIP` (when `false`).
+ *   No result is treated as `SKIP`.
+ *   The different flags can be combined by using the pipe operator:
+ *   `INCLUDE | SKIP`.
+ *
+ * @callback Callback
+ *   Callback called when done.
+ * @param {Error | null} error
+ *   Error.
+ *
+ *   > 👉 **Note**: Errors are currently never passed.
+ * @param {Array<VFile>} files
+ *   Files.
+ * @returns {void}
+ *   Nothing.
+ *
+ * @callback CallbackOne
+ *   Callback called when done finding one file.
+ * @param {Error | null} error
+ *   Error.
+ *
+ *   > 👉 **Note**: Errors are currently never passed
+ * @param {VFile | null} file
+ *   File.
+ * @returns {void}
+ *   Nothing.
+ *
+ * @typedef {Array<Assert | string> | Assert | string} Test
+ *   Things to search for.
+ *
+ *   For strings, the `basename` or `extname` of files must match them and
+ *   hidden folders and `node_modules` will not be searched.
+ *   For arrays, any test in them must match.
+ *
+ * @typedef State
+ *   State.
+ * @property {Set<string>} checked
+ *   Files that have been checked already.
+ * @property {Assert} test
+ *   File test.
+ * @property {boolean} broken
+ *   Whether we stopped searching.
+ */
+
+// Note: using callback style is likely faster here as we could walk into tons
+// of folders.
+
+
+
+
+
+// To do: use `URL`?
+// To do: next major: rename to `findDownAll`?
+
+/**
+ * Include this file.
+ */
+const INCLUDE = 1
+
+/**
+ * Skip this folder.
+ */
+const SKIP = 4
+
+/**
+ * Stop searching.
+ */
+const BREAK = 8
+
+/**
+ * Find files or folders downwards.
+ *
+ * > 👉 **Note**: files are not read (their `value` is not populated).
+ *
+ * @param test
+ *   Things to search for.
+ * @param paths
+ *   Places to search from.
+ * @param callback
+ *   Callback called when done.
+ * @returns
+ *   Nothing when `callback` is given, otherwise a promise that resolves to
+ *   files.
+ */
+const findDown =
+  /**
+   * @type {(
+   *   ((test: Test, paths: Array<string> | string | null | undefined, callback: Callback) => void) &
+   *   ((test: Test, callback: Callback) => void) &
+   *   ((test: Test, paths?: Array<string> | null | undefined) => Promise<Array<VFile>>)
+   * )}
+   */
+  (
+    /**
+     * @param {Test} test
+     * @param {Array<string> | Callback | string | null | undefined} [paths]
+     * @param {Callback | null | undefined} [callback]
+     * @returns {Promise<Array<VFile>> | undefined}
+     */
+    function (test, paths, callback) {
+      /** @type {Callback | null | undefined} */
+      let callbackAll
+      /** @type {Promise<Array<VFile>>} */
+      let promise
+
+      if (typeof paths === 'function') {
+        callbackAll = paths
+        promise = find(test, undefined, false)
+      } else {
+        callbackAll = callback
+        promise = find(test, paths || undefined, false)
+      }
+
+      if (!callbackAll) {
+        return promise
+      }
+
+      promise.then(
+        // @ts-expect-error: `callbackAll` is defined.
+        (files) => callbackAll(null, files),
+        callbackAll
+      )
+    }
+  )
+
+/**
+ * Find the first file or folder downwards.
+ *
+ * > 👉 **Note**: files are not read (their `value` is not populated).
+ *
+ * @param test
+ *   Things to search for.
+ * @param paths
+ *   Places to search from.
+ * @param callback
+ *   Callback called when done.
+ * @returns
+ *   Nothing when `callback` is given, otherwise a promise that resolves to
+ *   a file or `null`.
+ */
+const findDownOne =
+  /**
+   * @type {(
+   *   ((test: Test, paths: Array<string> | string | null | undefined, callback: CallbackOne) => void) &
+   *   ((test: Test, callback: CallbackOne) => void) &
+   *   ((test: Test, paths?: Array<string> | null | undefined) => Promise<VFile | null>)
+   * )}
+   */
+  (
+    /**
+     * @param {Test} test
+     * @param {Array<string> | CallbackOne | string | null | undefined} [paths]
+     * @param {CallbackOne | null | undefined} [callback]
+     * @returns {Promise<VFile | null> | undefined}
+     */
+    function (test, paths, callback) {
+      /** @type {CallbackOne | null | undefined} */
+      let callbackOne
+      /** @type {Promise<Array<VFile>>} */
+      let promise
+
+      if (typeof paths === 'function') {
+        callbackOne = paths
+        promise = find(test, undefined, true)
+      } else {
+        callbackOne = callback
+        promise = find(test, paths || undefined, true)
+      }
+
+      if (!callbackOne) {
+        return promise.then(one)
+      }
+
+      promise.then(
+        // @ts-expect-error: `callbackOne` is defined.
+        (files) => callbackOne(null, one(files)),
+        callbackOne
+      )
+    }
+  )
+
+/**
+ * Find files.
+ *
+ * @param {Test} test
+ *   Things to search for.
+ * @param {Array<string> | string | undefined} paths
+ *   Places to search from.
+ * @param {boolean} one
+ *   Stop at one file.
+ * @returns {Promise<Array<VFile>>}
+ *   Promise that resolves to files.
+ */
+function find(test, paths, one) {
+  /** @type {State} */
+  const state = {checked: new Set(), test: convert(test), broken: false}
+  /** @type {Array<string>} */
+  let cleanPaths
+
+  if (typeof paths === 'string') {
+    cleanPaths = [paths]
+  } else if (Array.isArray(paths)) {
+    cleanPaths = paths
+  } else {
+    cleanPaths = [external_node_process_namespaceObject.cwd()]
+  }
+
+  return new Promise(function (resolve) {
+    visitAll(state, cleanPaths, undefined, one, resolve)
+  })
+}
+
+/**
+ * Find files in `filePath`.
+ *
+ * @param {State} state
+ *   Info passed around.
+ * @param {string} filePath
+ *   Base.
+ * @param {boolean} one
+ *   Stop at one file.
+ * @param {(files: Array<VFile>) => void} done
+ *   Callback called when done.
+ */
+function visit(state, filePath, one, done) {
+  // Don’t walk into places multiple times.
+  if (state.checked.has(filePath)) {
+    done([])
+    return
+  }
+
+  state.checked.add(filePath)
+
+  external_node_fs_namespaceObject.stat(external_node_path_namespaceObject.resolve(filePath), function (_, stats) {
+    const real = Boolean(stats)
+    /** @type {Array<VFile>} */
+    const results = []
+
+    if (state.broken || !real) {
+      done([])
+    } else {
+      const file = toVFile(filePath)
+      const result = Number(state.test(file, stats))
+
+      if ((result & INCLUDE) === INCLUDE /* Include. */) {
+        results.push(file)
+
+        if (one) {
+          state.broken = true
+          return done(results)
+        }
+      }
+
+      if ((result & BREAK) === BREAK /* Break. */) {
+        state.broken = true
+      }
+
+      if (
+        state.broken ||
+        !stats.isDirectory() ||
+        (result & SKIP) === SKIP /* Skip. */
+      ) {
+        return done(results)
+      }
+
+      external_node_fs_namespaceObject.readdir(filePath, function (_, entries) {
+        visitAll(state, entries, filePath, one, onvisit)
+      })
+    }
+
+    /**
+     * @param {Array<VFile>} files
+     */
+    function onvisit(files) {
+      done([...results, ...files])
+    }
+  })
+}
+
+/**
+ * Find files in `paths`.
+ *
+ * @param {State} state
+ *   Info passed around.
+ * @param {Array<string>} paths
+ *   Paths.
+ * @param {string | undefined} cwd
+ *   Base.
+ * @param {boolean} one
+ *   Stop at one file.
+ * @param {(files: Array<VFile>) => void} done
+ *   Callback called when done.
+ */
+// eslint-disable-next-line max-params
+function visitAll(state, paths, cwd, one, done) {
+  let actual = -1
+  let expected = -1
+  /** @type {Array<VFile>} */
+  const result = []
+
+  while (++expected < paths.length) {
+    visit(state, external_node_path_namespaceObject.join(cwd || '', paths[expected]), one, onvisit)
+  }
+
+  next()
+
+  /**
+   * @param {Array<VFile>} files
+   */
+  function onvisit(files) {
+    result.push(...files)
+    next()
+  }
+
+  function next() {
+    if (++actual === expected) {
+      done(result)
+    }
+  }
+}
+
+/**
+ * Convert `test`
+ *
+ * @param {Test} test
+ * @returns {Assert}
+ */
+function convert(test) {
+  return typeof test === 'function'
+    ? test
+    : typeof test === 'string'
+    ? testString(test)
+    : multiple(test)
+}
+
+/**
+ * Wrap a string given as a test.
+ *
+ * @param {string} test
+ * @returns {Assert}
+ */
+function testString(test) {
+  return check
+
+  /**
+   * Check whether the given `file` matches the bound value.
+   *
+   * @type {Assert}
+   */
+  function check(file) {
+    // File matches the given value as the basename or extname.
+    if (test === file.basename || test === file.extname) {
+      return INCLUDE
+    }
+
+    // Ignore dotfiles and `node_modules` normally.
+    if (
+      file.basename &&
+      (file.basename.charAt(0) === '.' || file.basename === 'node_modules')
+    ) {
+      return SKIP
+    }
+  }
+}
+
+/**
+ * Check multiple tests.
+ *
+ * @param {Array<Assert | string>} test
+ * @returns {Assert}
+ */
+function multiple(test) {
+  /** @type {Array<Assert>} */
+  const tests = []
+  let index = -1
+
+  while (++index < test.length) {
+    tests[index] = convert(test[index])
+  }
+
+  return check
+
+  /** @type {Assert} */
+  function check(file, stats) {
+    let index = -1
+
+    while (++index < tests.length) {
+      const result = tests[index](file, stats)
+
+      if (result) {
+        return result
+      }
+    }
+
+    return false
+  }
+}
+
+/**
+ * @param {Array<VFile>} files
+ * @returns {VFile | null}
+ */
+function one(files) {
+  return files[0] || null
+}
+
+;// CONCATENATED MODULE: ./src/main.ts
 
 
 
 
 async function run() {
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("actions/transform");
-    const workingDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("working-directory");
-    const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("content-directory");
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`workingDirectory = ${workingDirectory}`);
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`contentDirectory = ${contentDirectory}`);
-    const files = klaw_sync__WEBPACK_IMPORTED_MODULE_3___default()(path__WEBPACK_IMPORTED_MODULE_1__.join(workingDirectory, contentDirectory), {
-        nodir: true,
-        traverseAll: true,
-        filter: (item) => {
-            // ends with .mdx or .md
-            return !!item.path.match(/\.(mdx|md)$/);
-        },
-    });
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.notice(`found ${files.length} files`);
+    core.info("actions/transform");
+    const workingDirectory = core.getInput("working-directory");
+    const contentDirectory = core.getInput("content-directory");
+    core.info(`workingDirectory = ${workingDirectory}`);
+    core.info(`contentDirectory = ${contentDirectory}`);
+    const files = await findDown(".mdx", [
+        external_path_.join(workingDirectory, contentDirectory),
+    ]);
+    core.notice(`found ${files.length} files`);
     // crude transformation
     files.forEach((file) => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup(file.path);
-        const content = fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync(file.path, "utf8");
-        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(content);
+        core.startGroup(file.path);
+        const content = external_fs_.readFileSync(file.path, "utf8");
+        core.info(JSON.stringify(file.data, null, 2));
+        core.info(content);
         const newContent = content + " -- TRANSFORMED";
-        fs__WEBPACK_IMPORTED_MODULE_0__.writeFileSync(file.path, newContent, "utf8");
-        _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
+        external_fs_.writeFileSync(file.path, newContent, "utf8");
+        core.endGroup();
     });
 }
 run();
 
 })();
 
-module.exports = __webpack_exports__;
-/******/ })()
-;
