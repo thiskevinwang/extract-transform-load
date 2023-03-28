@@ -24,7 +24,10 @@
     "@actions/tool-cache": "^2.0.1",
     "klaw-sync": "^6.0.0",
     "rimraf": "^4.4.1",
-    "typescript": "^5.0.2"
+    "to-vfile": "^7.2.4",
+    "typescript": "^5.0.2",
+    "vfile": "^5.3.7",
+    "vfile-find-down": "^6.1.0"
   },
   "workspaces": [
     "actions/*"

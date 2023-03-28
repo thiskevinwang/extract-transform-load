@@ -3912,46 +3912,44 @@ __nccwpck_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
 async function run() {
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("actions/extract");
-    const workingDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("working-directory");
-    const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("content-directory");
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`workingDirectory = ${workingDirectory}`);
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`contentDirectory = ${contentDirectory}`);
-    // remove all folders that aren't the content directory
-    const pathsToDelete = klaw_sync__WEBPACK_IMPORTED_MODULE_3___default()(workingDirectory, {
-        depthLimit: 2,
-        nodir: false,
-        nofile: false,
-        filter: (item) => {
-            const pattern = path__WEBPACK_IMPORTED_MODULE_1__.join(workingDirectory, contentDirectory);
-            return !item.path.startsWith(pattern) && !pattern.includes(item.path);
-        },
-    });
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup("pathsToDelete");
-    pathsToDelete.forEach((p) => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(" - " + p.path);
-    });
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
-    // delete
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.startGroup("deleting");
-    pathsToDelete.forEach((file) => {
-        try {
-            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`deleting ${file.path}`);
-            const stat = fs__WEBPACK_IMPORTED_MODULE_0__.statSync(file.path);
-            if (stat.isDirectory()) {
-                fs__WEBPACK_IMPORTED_MODULE_0__.rmdirSync(file.path, { recursive: true });
-            }
-            if (stat.isFile()) {
-                fs__WEBPACK_IMPORTED_MODULE_0__.rmSync(file.path);
-            }
-        }
-        catch (e) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`failed to delete ${file.path}: ${e}`);
-        }
-    });
-    _actions_core__WEBPACK_IMPORTED_MODULE_2__.endGroup();
+  _actions_core__WEBPACK_IMPORTED_MODULE_2__.info("actions/extract");
+  const workingDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("working-directory");
+  const contentDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_2__.getInput("content-directory");
+  _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`workingDirectory = ${workingDirectory}`);
+  _actions_core__WEBPACK_IMPORTED_MODULE_2__.info(`contentDirectory = ${contentDirectory}`);
+
+  // const files = walk(path.join(workingDirectory, contentDirectory), {
+  //   nodir: true,
+  //   traverseAll: true,
+  //   filter: (item) => {
+  //     // ends with .mdx or .md
+  //     return !!item.path.match(/\.(mdx|md)$/);
+  //   },
+  // });
+
+  // core.notice(`found ${files.length} files`);
+
+  // covert files to Vfiles
+  // files.forEach((file) => {
+  //   core.startGroup(file.path);
+  //   const foo = toVFile(file.path)
+  //   // const content = fs.readFileSync(file.path, "utf8");
+
+  //   // const vfile = new VFile({
+  //   //   path: file.path,
+  //   //   value: content,
+  //   // });
+
+  //   fs.writeFileSync(file.path, JSON.stringify(vfile), "utf8");
+  //   core.endGroup();
+  // });
 }
+
 run();
 
 })();
