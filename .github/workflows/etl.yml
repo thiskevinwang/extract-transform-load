@@ -6,18 +6,18 @@ on:
     inputs:
       repository:
         type: string
-        description: The directory to run the ETL on. Like 'hashicorp/waypoint'
-        default: "hashicorp/waypoint"
+        description: "The directory to run the ETL on. Example: `hashicorp/waypoint`"
+        default: "thiskevinwang/extract-transform-load"
         required: false
       parent-dir:
         type: string
-        default: "website"
+        description: "The directory that contains `content-dir` and `data-dir`; Example: `website`"
       content-dir:
         type: string
-        default: "website/content"
+        description: "The directory that contains the markdown files; Example: `website/content`"
       data-dir:
         type: string
-        default: "website/data"
+        description: "The directory that contains the data files; Example: `website/data`"
 
 jobs:
   setup:

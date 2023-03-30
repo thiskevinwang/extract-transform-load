@@ -3,8 +3,9 @@ import * as path from "path";
 import * as core from "@actions/core";
 import { findDown } from "vfile-find-down";
 import { VFile } from "vfile";
+import type { VFileCoreOptions } from "vfile/lib";
 
-async function run(): Promise<void> {
+async function run() {
   core.info("actions/load");
   const workingDirectory = core.getInput("working-directory");
   const contentDirectory = core.getInput("content-directory");
@@ -21,8 +22,11 @@ async function run(): Promise<void> {
   files.forEach((file) => {
     core.startGroup(file.path);
     // deserialize VFile object
-    const data = JSON.parse(fs.readFileSync(file.path, "utf8"));
-    const vfile = new VFile(data);
+    const vfileOptions: VFileCoreOptions = JSON.parse(
+      fs.readFileSync(file.path, "utf8")
+    );
+
+    const vfile = new VFile(vfileOptions);
     // log data
     core.info(JSON.stringify(vfile.data, null, 2));
     // log deserialized value
