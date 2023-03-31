@@ -1,43 +1,27 @@
-import { findDown } from "vfile-find-down";
-import { writeSync } from "to-vfile";
-import * as path from "path";
-import * as fs from "fs";
 import * as core from "@actions/core";
+
+import mdxExtractor from "../extractors/mdx.js";
+import ymlExtractor from "../extractors/yml.js";
+import jsonExtractor from "../extractors/json.js";
 
 async function run(): Promise<void> {
   core.info("actions/extract");
   const workingDirectory = core.getInput("working-directory");
   const contentDirectory = core.getInput("content-directory");
-  core.info(`workingDirectory = ${workingDirectory}`);
-  core.info(`contentDirectory = ${contentDirectory}`);
 
-  // collect file paths
-  const files = await findDown(".mdx", [
-    path.join(workingDirectory, contentDirectory),
-  ]);
-
-  core.notice(`found ${files.length} files`);
-
-  // populate files with content because `vfile-find-down` does not
-  // and save files as serialized VFile objects.
-  files.map((file) => {
-    core.startGroup(`writing ${file.path}`);
-
-    file.value = fs.readFileSync(file.path, "utf8");
-
-    // smoke test pass of arbitrary VFile data
-    file.data = {
-      ...file.data,
-      extract: 1,
-    };
-
-    core.info(file.toString("utf8"));
-
-    // serialize VFile object
-    file.value = JSON.stringify(file);
-    writeSync(file, { encoding: "utf8" });
-
-    core.endGroup();
+  // NOTE: Extractors will read repo contents from the FS and replace files
+  //       with serialized VFile objects. Passing serialized VFile objects
+  //       between jobs is primarily a means to an end to achieve splitting
+  //       ETL phases in to separate jobs. The tradeoff is slightly clunkier
+  //       ergonomics for passing data between phases, but improved optics
+  //       when viewing / debugging workflows in the GitHub UI.
+  // QUESTION: do we want to conditionally extract?
+  // QUESTION: is there a more favorable/pluggable interface for extractors?
+  await mdxExtractor({ workingDirectory, contentDirectory });
+  await ymlExtractor();
+  await jsonExtractor({
+    workingDirectory,
+    dataDirectory: "data" /* TODO: don't hard code */,
   });
 }
 

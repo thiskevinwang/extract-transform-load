@@ -2814,12 +2814,8 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 
-;// CONCATENATED MODULE: external "node:fs"
-const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
-;// CONCATENATED MODULE: external "node:path"
-const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
-;// CONCATENATED MODULE: external "node:process"
-const external_node_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:process");
+// EXTERNAL MODULE: ../../node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(117);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(147);
 // EXTERNAL MODULE: external "path"
@@ -4001,6 +3997,12 @@ toVFile.writeSync = writeSync
 toVFile.read = read
 toVFile.write = write
 
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
+;// CONCATENATED MODULE: external "node:path"
+const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
+;// CONCATENATED MODULE: external "node:process"
+const external_node_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:process");
 ;// CONCATENATED MODULE: ../../node_modules/vfile-find-down/lib/index.js
 /**
  * @typedef {import('vfile').VFile} VFile
@@ -4422,20 +4424,14 @@ function one(files) {
   return files[0] || null
 }
 
-// EXTERNAL MODULE: ../../node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(117);
-;// CONCATENATED MODULE: ./src/main.ts
+;// CONCATENATED MODULE: ./extractors/mdx.ts
 
 
 
 
 
-async function run() {
-    core.info("actions/extract");
-    const workingDirectory = core.getInput("working-directory");
-    const contentDirectory = core.getInput("content-directory");
-    core.info(`workingDirectory = ${workingDirectory}`);
-    core.info(`contentDirectory = ${contentDirectory}`);
+async function mdxExtractor(settings) {
+    const { workingDirectory, contentDirectory } = settings;
     // collect file paths
     const files = await findDown(".mdx", [
         external_path_.join(workingDirectory, contentDirectory),
@@ -4456,6 +4452,43 @@ async function run() {
         file.value = JSON.stringify(file);
         writeSync(file, { encoding: "utf8" });
         core.endGroup();
+    });
+}
+
+;// CONCATENATED MODULE: ./extractors/yml.ts
+
+async function ymlExtractor() {
+    core.warning("ymlExtractor not implemented");
+}
+
+;// CONCATENATED MODULE: ./extractors/json.ts
+
+async function jsonExtractor(settings) {
+    core.warning("jsonExtractor not implemented");
+}
+
+;// CONCATENATED MODULE: ./src/main.ts
+
+
+
+
+async function run() {
+    core.info("actions/extract");
+    const workingDirectory = core.getInput("working-directory");
+    const contentDirectory = core.getInput("content-directory");
+    // NOTE: Extractors will read repo contents from the FS and replace files
+    //       with serialized VFile objects. Passing serialized VFile objects
+    //       between jobs is primarily a means to an end to achieve splitting
+    //       ETL phases in to separate jobs. The tradeoff is slightly clunkier
+    //       ergonomics for passing data between phases, but improved optics
+    //       when viewing / debugging workflows in the GitHub UI.
+    // QUESTION: do we want to conditionally extract?
+    // QUESTION: is there a more favorable/pluggable interface for extractors?
+    await mdxExtractor({ workingDirectory, contentDirectory });
+    await ymlExtractor();
+    await jsonExtractor({
+        workingDirectory,
+        dataDirectory: "data" /* TODO: don't hard code */,
     });
 }
 run();
